@@ -12,6 +12,7 @@ import MahjongAnalyzer
 import RealityKit
 
 /// This enum encapsulates all actions a player needs to do when making a decision
+/// It also encapsulates state transtions and other side effects after decision
 enum PlayerDecision {
     case hu(PlayerController, MahjongEntity?)
     case zimo(PlayerController, MahjongEntity?)

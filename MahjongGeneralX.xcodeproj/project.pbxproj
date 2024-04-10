@@ -3,10 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CBA6F73C2BC5D31B0056FA84 /* PlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA6F73B2BC5D31B0056FA84 /* PlayerController.swift */; };
+		CBA6F7432BC60A0B0056FA84 /* MahjongCore in Frameworks */ = {isa = PBXBuildFile; productRef = CBA6F7422BC60A0B0056FA84 /* MahjongCore */; };
+		CBEE80412BC60F360060DFD9 /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80402BC60F360060DFD9 /* PlayerState.swift */; };
+		CBEE80432BC622240060DFD9 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80422BC622240060DFD9 /* GameManager.swift */; };
+		CBEE80452BC6FD360060DFD9 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80442BC6FD360060DFD9 /* GameState.swift */; };
+		CBEE80472BC70F490060DFD9 /* GameConfigs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80462BC70F490060DFD9 /* GameConfigs.swift */; };
+		CBEE80492BC7266E0060DFD9 /* BotController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80482BC7266E0060DFD9 /* BotController.swift */; };
 		D0D0F1DB2BC5B3E500D514AF /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = D0D0F1DA2BC5B3E500D514AF /* RealityKitContent */; };
 		D0D0F1DD2BC5B3E500D514AF /* MahjongGeneralXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */; };
 		D0D0F1DF2BC5B3E500D514AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F1DE2BC5B3E500D514AF /* ContentView.swift */; };
@@ -16,6 +23,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CBA6F73B2BC5D31B0056FA84 /* PlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerController.swift; sourceTree = "<group>"; };
+		CBEE80402BC60F360060DFD9 /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
+		CBEE80422BC622240060DFD9 /* GameManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
+		CBEE80442BC6FD360060DFD9 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		CBEE80462BC70F490060DFD9 /* GameConfigs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConfigs.swift; sourceTree = "<group>"; };
+		CBEE80482BC7266E0060DFD9 /* BotController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotController.swift; sourceTree = "<group>"; };
 		D0D0F1D52BC5B3E500D514AF /* MahjongGeneralX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MahjongGeneralX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D0F1D92BC5B3E500D514AF /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MahjongGeneralXApp.swift; sourceTree = "<group>"; };
@@ -31,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBA6F7432BC60A0B0056FA84 /* MahjongCore in Frameworks */,
 				D0D0F1DB2BC5B3E500D514AF /* RealityKitContent in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -38,12 +52,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CBA6F73A2BC5D2F20056FA84 /* GameModule */ = {
+			isa = PBXGroup;
+			children = (
+				CBA6F73B2BC5D31B0056FA84 /* PlayerController.swift */,
+				CBEE80482BC7266E0060DFD9 /* BotController.swift */,
+				CBEE80422BC622240060DFD9 /* GameManager.swift */,
+				CBEE80442BC6FD360060DFD9 /* GameState.swift */,
+				CBEE80402BC60F360060DFD9 /* PlayerState.swift */,
+				CBEE80462BC70F490060DFD9 /* GameConfigs.swift */,
+			);
+			path = GameModule;
+			sourceTree = "<group>";
+		};
+		CBA6F7412BC608960056FA84 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D0D0F1CC2BC5B3E500D514AF = {
 			isa = PBXGroup;
 			children = (
 				D0D0F1D72BC5B3E500D514AF /* MahjongGeneralX */,
 				D0D0F1D82BC5B3E500D514AF /* Packages */,
 				D0D0F1D62BC5B3E500D514AF /* Products */,
+				CBA6F7412BC608960056FA84 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +93,7 @@
 		D0D0F1D72BC5B3E500D514AF /* MahjongGeneralX */ = {
 			isa = PBXGroup;
 			children = (
+				CBA6F73A2BC5D2F20056FA84 /* GameModule */,
 				D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */,
 				D0D0F1DE2BC5B3E500D514AF /* ContentView.swift */,
 				D0D0F1E02BC5B3E500D514AF /* ImmersiveView.swift */,
@@ -102,6 +138,7 @@
 			name = MahjongGeneralX;
 			packageProductDependencies = (
 				D0D0F1DA2BC5B3E500D514AF /* RealityKitContent */,
+				CBA6F7422BC60A0B0056FA84 /* MahjongCore */,
 			);
 			productName = MahjongGenerallX;
 			productReference = D0D0F1D52BC5B3E500D514AF /* MahjongGeneralX.app */;
@@ -131,6 +168,11 @@
 				Base,
 			);
 			mainGroup = D0D0F1CC2BC5B3E500D514AF;
+			packageReferences = (
+				CBA6F73E2BC607F00056FA84 /* XCLocalSwiftPackageReference "../MahjongPackagesAVP/MahjongAnalyzer" */,
+				CBA6F73F2BC608060056FA84 /* XCLocalSwiftPackageReference "../MahjongPackagesAVP/MahjongCommons" */,
+				CBA6F7402BC608160056FA84 /* XCLocalSwiftPackageReference "../MahjongPackagesAVP/MahjongCore" */,
+			);
 			productRefGroup = D0D0F1D62BC5B3E500D514AF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -157,9 +199,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBEE80452BC6FD360060DFD9 /* GameState.swift in Sources */,
+				CBEE80412BC60F360060DFD9 /* PlayerState.swift in Sources */,
+				CBEE80432BC622240060DFD9 /* GameManager.swift in Sources */,
 				D0D0F1DF2BC5B3E500D514AF /* ContentView.swift in Sources */,
+				CBEE80492BC7266E0060DFD9 /* BotController.swift in Sources */,
 				D0D0F1DD2BC5B3E500D514AF /* MahjongGeneralXApp.swift in Sources */,
+				CBA6F73C2BC5D31B0056FA84 /* PlayerController.swift in Sources */,
 				D0D0F1E12BC5B3E500D514AF /* ImmersiveView.swift in Sources */,
+				CBEE80472BC70F490060DFD9 /* GameConfigs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,7 +408,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		CBA6F73E2BC607F00056FA84 /* XCLocalSwiftPackageReference "../MahjongPackagesAVP/MahjongAnalyzer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MahjongPackagesAVP/MahjongAnalyzer;
+		};
+		CBA6F73F2BC608060056FA84 /* XCLocalSwiftPackageReference "../MahjongPackagesAVP/MahjongCommons" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MahjongPackagesAVP/MahjongCommons;
+		};
+		CBA6F7402BC608160056FA84 /* XCLocalSwiftPackageReference "../MahjongPackagesAVP/MahjongCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MahjongPackagesAVP/MahjongCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		CBA6F7422BC60A0B0056FA84 /* MahjongCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MahjongCore;
+		};
 		D0D0F1DA2BC5B3E500D514AF /* RealityKitContent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
