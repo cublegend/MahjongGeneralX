@@ -25,7 +25,7 @@ class GameManager: IDecisionProcessor {
     var playerDecisions: [String: PlayerDecision] = [:]
     var playerCompletions: Set<String> = []
     var currentPlayerIndex: Int = 0
-
+    
     // TODO: Bloody only stuff
     var switchOrder: SwitchOrder = .switchOrderFront
 

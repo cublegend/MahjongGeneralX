@@ -12,10 +12,25 @@
 		CBEE80432BC622240060DFD9 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80422BC622240060DFD9 /* GameManager.swift */; };
 		CBEE80452BC6FD360060DFD9 /* DataStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80442BC6FD360060DFD9 /* DataStructure.swift */; };
 		CBEE804D2BC7A9C90060DFD9 /* GameManager+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE804C2BC7A9C90060DFD9 /* GameManager+State.swift */; };
+		CBEE80522BC888CF0060DFD9 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80502BC888CF0060DFD9 /* AppState.swift */; };
+		CBEE80532BC888CF0060DFD9 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80512BC888CF0060DFD9 /* AppConfig.swift */; };
+		CBEE805A2BC888F00060DFD9 /* ImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80542BC888F00060DFD9 /* ImmersiveView.swift */; };
+		CBEE805B2BC888F00060DFD9 /* InfoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80552BC888F00060DFD9 /* InfoLabel.swift */; };
+		CBEE805C2BC888F00060DFD9 /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80562BC888F00060DFD9 /* MainMenu.swift */; };
+		CBEE805D2BC888F00060DFD9 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80572BC888F00060DFD9 /* Settings.swift */; };
+		CBEE805E2BC888F00060DFD9 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80582BC888F00060DFD9 /* Welcome.swift */; };
+		CBEE80662BC889990060DFD9 /* PlacementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE805F2BC889990060DFD9 /* PlacementManager.swift */; };
+		CBEE80672BC889990060DFD9 /* GameInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80602BC889990060DFD9 /* GameInfo.swift */; };
+		CBEE80682BC889990060DFD9 /* PlacementState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80612BC889990060DFD9 /* PlacementState.swift */; };
+		CBEE80692BC889990060DFD9 /* PlacementManager+Detection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80622BC889990060DFD9 /* PlacementManager+Detection.swift */; };
+		CBEE806A2BC889990060DFD9 /* UserDiscardTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */; };
+		CBEE806B2BC889990060DFD9 /* UserGameMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80642BC889990060DFD9 /* UserGameMenu.swift */; };
+		CBEE806C2BC889990060DFD9 /* UserDecisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80652BC889990060DFD9 /* UserDecisionView.swift */; };
+		CBEE80722BC88A580060DFD9 /* HandDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE806E2BC88A580060DFD9 /* HandDetection.swift */; };
+		CBEE80732BC88A580060DFD9 /* PlaneDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */; };
+		CBEE80742BC88A580060DFD9 /* WorldDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80702BC88A580060DFD9 /* WorldDetection.swift */; };
 		D0D0F1DB2BC5B3E500D514AF /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = D0D0F1DA2BC5B3E500D514AF /* RealityKitContent */; };
 		D0D0F1DD2BC5B3E500D514AF /* MahjongGeneralXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */; };
-		D0D0F1DF2BC5B3E500D514AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F1DE2BC5B3E500D514AF /* ContentView.swift */; };
-		D0D0F1E12BC5B3E500D514AF /* ImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F1E02BC5B3E500D514AF /* ImmersiveView.swift */; };
 		D0D0F1E32BC5B3E600D514AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0D0F1E22BC5B3E600D514AF /* Assets.xcassets */; };
 		D0D0F1E62BC5B3E600D514AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0D0F1E52BC5B3E600D514AF /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -26,11 +41,26 @@
 		CBEE80442BC6FD360060DFD9 /* DataStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructure.swift; sourceTree = "<group>"; };
 		CBEE804C2BC7A9C90060DFD9 /* GameManager+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameManager+State.swift"; sourceTree = "<group>"; };
 		CBEE804F2BC8730D0060DFD9 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = .swiftlint.yml; path = MahjongGeneralX/.swiftlint.yml; sourceTree = SOURCE_ROOT; };
+		CBEE80502BC888CF0060DFD9 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		CBEE80512BC888CF0060DFD9 /* AppConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		CBEE80542BC888F00060DFD9 /* ImmersiveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImmersiveView.swift; sourceTree = "<group>"; };
+		CBEE80552BC888F00060DFD9 /* InfoLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoLabel.swift; sourceTree = "<group>"; };
+		CBEE80562BC888F00060DFD9 /* MainMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
+		CBEE80572BC888F00060DFD9 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		CBEE80582BC888F00060DFD9 /* Welcome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
+		CBEE805F2BC889990060DFD9 /* PlacementManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlacementManager.swift; sourceTree = "<group>"; };
+		CBEE80602BC889990060DFD9 /* GameInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameInfo.swift; sourceTree = "<group>"; };
+		CBEE80612BC889990060DFD9 /* PlacementState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlacementState.swift; sourceTree = "<group>"; };
+		CBEE80622BC889990060DFD9 /* PlacementManager+Detection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlacementManager+Detection.swift"; sourceTree = "<group>"; };
+		CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDiscardTypeView.swift; sourceTree = "<group>"; };
+		CBEE80642BC889990060DFD9 /* UserGameMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserGameMenu.swift; sourceTree = "<group>"; };
+		CBEE80652BC889990060DFD9 /* UserDecisionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDecisionView.swift; sourceTree = "<group>"; };
+		CBEE806E2BC88A580060DFD9 /* HandDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandDetection.swift; sourceTree = "<group>"; };
+		CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneDetection.swift; sourceTree = "<group>"; };
+		CBEE80702BC88A580060DFD9 /* WorldDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorldDetection.swift; sourceTree = "<group>"; };
 		D0D0F1D52BC5B3E500D514AF /* MahjongGeneralX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MahjongGeneralX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D0F1D92BC5B3E500D514AF /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MahjongGeneralXApp.swift; sourceTree = "<group>"; };
-		D0D0F1DE2BC5B3E500D514AF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		D0D0F1E02BC5B3E500D514AF /* ImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmersiveView.swift; sourceTree = "<group>"; };
 		D0D0F1E22BC5B3E600D514AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D0D0F1E52BC5B3E600D514AF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D0D0F1E72BC5B3E600D514AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -52,6 +82,11 @@
 		CBA6F73A2BC5D2F20056FA84 /* GameModule */ = {
 			isa = PBXGroup;
 			children = (
+				CBEE806D2BC889B10060DFD9 /* Placement */,
+				CBEE80602BC889990060DFD9 /* GameInfo.swift */,
+				CBEE80652BC889990060DFD9 /* UserDecisionView.swift */,
+				CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */,
+				CBEE80642BC889990060DFD9 /* UserGameMenu.swift */,
 				CBA6F73B2BC5D31B0056FA84 /* PlayerController.swift */,
 				CBEE80422BC622240060DFD9 /* GameManager.swift */,
 				CBEE804C2BC7A9C90060DFD9 /* GameManager+State.swift */,
@@ -65,6 +100,38 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CBEE80592BC888F00060DFD9 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				CBEE80542BC888F00060DFD9 /* ImmersiveView.swift */,
+				CBEE80552BC888F00060DFD9 /* InfoLabel.swift */,
+				CBEE80562BC888F00060DFD9 /* MainMenu.swift */,
+				CBEE80572BC888F00060DFD9 /* Settings.swift */,
+				CBEE80582BC888F00060DFD9 /* Welcome.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		CBEE806D2BC889B10060DFD9 /* Placement */ = {
+			isa = PBXGroup;
+			children = (
+				CBEE805F2BC889990060DFD9 /* PlacementManager.swift */,
+				CBEE80622BC889990060DFD9 /* PlacementManager+Detection.swift */,
+				CBEE80612BC889990060DFD9 /* PlacementState.swift */,
+			);
+			path = Placement;
+			sourceTree = "<group>";
+		};
+		CBEE80712BC88A580060DFD9 /* Detection */ = {
+			isa = PBXGroup;
+			children = (
+				CBEE806E2BC88A580060DFD9 /* HandDetection.swift */,
+				CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */,
+				CBEE80702BC88A580060DFD9 /* WorldDetection.swift */,
+			);
+			path = Detection;
 			sourceTree = "<group>";
 		};
 		D0D0F1CC2BC5B3E500D514AF = {
@@ -88,11 +155,13 @@
 		D0D0F1D72BC5B3E500D514AF /* MahjongGeneralX */ = {
 			isa = PBXGroup;
 			children = (
+				CBEE80712BC88A580060DFD9 /* Detection */,
+				CBEE80592BC888F00060DFD9 /* View */,
+				CBEE80512BC888CF0060DFD9 /* AppConfig.swift */,
+				CBEE80502BC888CF0060DFD9 /* AppState.swift */,
 				CBEE804F2BC8730D0060DFD9 /* .swiftlint.yml */,
 				CBA6F73A2BC5D2F20056FA84 /* GameModule */,
 				D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */,
-				D0D0F1DE2BC5B3E500D514AF /* ContentView.swift */,
-				D0D0F1E02BC5B3E500D514AF /* ImmersiveView.swift */,
 				D0D0F1E22BC5B3E600D514AF /* Assets.xcassets */,
 				D0D0F1E72BC5B3E600D514AF /* Info.plist */,
 				D0D0F1E42BC5B3E600D514AF /* Preview Content */,
@@ -216,13 +285,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBEE80532BC888CF0060DFD9 /* AppConfig.swift in Sources */,
 				CBEE80452BC6FD360060DFD9 /* DataStructure.swift in Sources */,
+				CBEE805D2BC888F00060DFD9 /* Settings.swift in Sources */,
+				CBEE805A2BC888F00060DFD9 /* ImmersiveView.swift in Sources */,
 				CBEE80432BC622240060DFD9 /* GameManager.swift in Sources */,
-				D0D0F1DF2BC5B3E500D514AF /* ContentView.swift in Sources */,
+				CBEE805E2BC888F00060DFD9 /* Welcome.swift in Sources */,
+				CBEE80522BC888CF0060DFD9 /* AppState.swift in Sources */,
+				CBEE80722BC88A580060DFD9 /* HandDetection.swift in Sources */,
 				D0D0F1DD2BC5B3E500D514AF /* MahjongGeneralXApp.swift in Sources */,
+				CBEE80732BC88A580060DFD9 /* PlaneDetection.swift in Sources */,
+				CBEE805C2BC888F00060DFD9 /* MainMenu.swift in Sources */,
+				CBEE80682BC889990060DFD9 /* PlacementState.swift in Sources */,
+				CBEE806B2BC889990060DFD9 /* UserGameMenu.swift in Sources */,
+				CBEE80742BC88A580060DFD9 /* WorldDetection.swift in Sources */,
+				CBEE805B2BC888F00060DFD9 /* InfoLabel.swift in Sources */,
+				CBEE80662BC889990060DFD9 /* PlacementManager.swift in Sources */,
+				CBEE806A2BC889990060DFD9 /* UserDiscardTypeView.swift in Sources */,
 				CBA6F73C2BC5D31B0056FA84 /* PlayerController.swift in Sources */,
+				CBEE80692BC889990060DFD9 /* PlacementManager+Detection.swift in Sources */,
 				CBEE804D2BC7A9C90060DFD9 /* GameManager+State.swift in Sources */,
-				D0D0F1E12BC5B3E500D514AF /* ImmersiveView.swift in Sources */,
+				CBEE806C2BC889990060DFD9 /* UserDecisionView.swift in Sources */,
+				CBEE80672BC889990060DFD9 /* GameInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
