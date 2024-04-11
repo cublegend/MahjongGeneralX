@@ -6,27 +6,119 @@
 //
 
 import Foundation
-import RealityKit
 import MahjongCore
 import MahjongCommons
+import MahjongAnalyzer
+
+struct PlayerDecision {
+    let label: PlayerDecisionLabel
+    let decision: ()->Void
+}
+
+enum PlayerDecisionLabel {
+    case hu
+    case kang
+    case pong
+}
 
 protocol IDecisionProcessor {
-    func submitDecision(for player: PlayerController, decision: PlayerDecision)
+    func submitDecision(for player: IPlayerController, decision: PlayerDecision)
+    func submitCompletion(for player: IPlayerController)
+}
+
+/// The interface that GameManager interacts with
+protocol IPlayerController {
+    var playerID: String {get}
+    var playerState: PlayerState {get}
+    var basePlayer: Player {get}
+    var switchTiles:[MahjongEntity]{get}
+    func takeTurn(state: PlayerState, completion: @escaping () -> Void)
+    func askPlayerToDecide(discarded: MahjongEntity)
+    func askPlayerToChooseSwitchTiles()
+    func askPlayerToChooseDiscardType()
 }
 
 class GameManager: IDecisionProcessor {
     let style: IMahjongStyle
     let mahjongSet: MahjongSet
     let table: TableEntity
+    var currentTurn = 0
     var gameState: GameState = .gameWaitToStart
-    var players: [PlayerController] = []
+    var players: [IPlayerController] = []
     var playerDecisions: [String:PlayerDecision] = [:]
+    var playerCompletions: Set<String> = []
+    var currentPlayerIndex: Int = 0
     
-    init(players: [PlayerController], mahjongSet: MahjongSet, style: IMahjongStyle, table: TableEntity) {
+    // FIXME: Bloody only stuff
+    var switchOrder: SwitchOrder = .switchOrderFront
+    
+    init(players: [IPlayerController], mahjongSet: MahjongSet, style: IMahjongStyle, table: TableEntity) {
         self.mahjongSet = mahjongSet
         self.players = players
         self.style = style
         self.table = table
+    }
+    
+    // MARK: Core logic
+    
+    func nextTurn(_ completion: @escaping ()->Void) {
+        currentTurn += 1
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.count
+        players[currentPlayerIndex].takeTurn(state: PlayerState.roundDraw, completion: completion)
+    }
+    
+    /// Used for players to submit their decision
+    /// When all decisions are received, they will be filtered.
+    /// If only hu decisions are submitted, all hu decisions are process
+    /// If hu and pong both exists, pongs will be ignored
+    /// else process pong
+    func submitDecision(for player: IPlayerController, decision: PlayerDecision) {
+        playerDecisions[player.playerID] = decision
+        
+        // When all decisions have been submitted, process them
+        if playerDecisions.count == players.count {
+            // Determine the presence of specific decisions
+            let hasHu = playerDecisions.values.contains { $0.label == .hu }
+            // Filter decisions based on the rules
+            let filteredDecisions: [PlayerDecision]
+            if hasHu {
+                // If only hu decisions are submitted or hu is present, keep only hu decisions
+                filteredDecisions = playerDecisions.values.filter { $0.label == .hu }
+            } else {
+                // If neither hu nor pong, proceed with kang or whatever is left
+                filteredDecisions = Array(playerDecisions.values)
+            }
+
+            // Execute actions for the filtered decisions
+            for decision in filteredDecisions {
+                decision.decision()
+            }
+            
+            playerDecisions.removeAll()
+        }
+    }
+    
+    func submitCompletion(for player: any IPlayerController) {
+        playerCompletions.insert(player.playerID)
+        if playerCompletions.count == players.count {
+            if gameState == .switchTiles {
+                performSwitchTilesAction()
+            } else if gameState == .decideDiscard {
+                enterRoundState()
+            } else {
+                print("\(gameState) complete! But not handled")
+            }
+            playerCompletions.removeAll()
+        }
+    }
+    
+    func otherPlayerDecides(current: IPlayerController) {
+        for player in players {
+            if player.playerID == current.playerID { continue }
+            // ask players to decide
+            // all players should submit a decision using submitDecision(...)
+            current.askPlayerToDecide(discarded: mahjongSet.lastTileDiscarded!)
+        }
     }
     
     // MARK: starts game
@@ -56,7 +148,7 @@ class GameManager: IDecisionProcessor {
     // MARK: .waitToStart
     
     func enterWaitToStartState() {
-        gameState.transition(to: .gameWaitToStart)
+        guard gameState.transition(to: .gameWaitToStart) else { return }
         initializeGameData()
         
         enterInitialDrawState()
@@ -66,27 +158,82 @@ class GameManager: IDecisionProcessor {
         for player in players {
             mahjongSet.discardPile[player.playerID] = []
         }
+        playerCompletions.removeAll()
         playerDecisions.removeAll()
+        currentTurn = 0
+        currentPlayerIndex = Int.random(in: 0..<players.count) // FIXME: change to random dealer
     }
     
     // MARK: .initialDraw
     
     func enterInitialDrawState() {
-        guard gameState == .gameWaitToStart else {
-            return
-        }
-        gameState.transition(to: .initialDraw)
-        
+        guard gameState.transition(to: .initialDraw) else { return }
+        nextTurn(initDrawCompletion)
     }
     
+    func initDrawCompletion() {
+        if currentTurn == 16 {
+            // finish init draw
+            // for testing, straight to .round
+            enterSwitchTileState()
+        } else {
+            nextTurn(initDrawCompletion)
+        }
+    }
     
+    // MARK: .switchTiles
     
+    /// ask all players to choose switch tiles
+    /// when a player is ready, they should submit a complete Decision
+    /// through submitCompletion(...)
+    func enterSwitchTileState() {
+        guard gameState.transition(to: .switchTiles) else { return }
+        switchOrder = SwitchOrder.allCases.randomElement()!
+        for player in players {
+            player.askPlayerToChooseSwitchTiles()
+        }
+    }
     
+    /// performs the switch action for all players in a command
+    func performSwitchTilesAction() {
+        if gameState != .switchTiles { return }
+        // construct switch dictionary
+        var dic:[String:[MahjongEntity]] = [:]
+        for player in players {
+            dic[player.playerID] = player.switchTiles
+        }
+        Commands.executeCommand(SwitchTilesCommand(players: players.map({$0.basePlayer}), switchTiles: dic, order: switchOrder))
+        
+        enterDecideDiscardState()
+    }
     
-    func submitDecision(for player: PlayerController, decision: PlayerDecision) {
-        playerDecisions[player.playerID] = decision
-        if playerDecisions.count == players.count {
-            // process decisions
+    // MARK: .decideDiscardState
+    
+    /// ask all players to choose discard type
+    /// when a player is ready, they should submit a complete Decision
+    /// through submitCompletion(...)
+    /// if all players complete, enter round state
+    func enterDecideDiscardState() {
+        guard gameState.transition(to: .decideDiscard) else { return }
+        for player in players {
+            player.askPlayerToChooseDiscardType()
+        }
+    }
+    
+    // MARK: .round
+    
+    func enterRoundState() {
+        guard gameState.transition(to: .round) else { return }
+        nextTurn(roundCompletion)
+    }
+    
+    func roundCompletion() {
+        let currentPlayer = players[currentPlayerIndex]
+        // if player hu, nextTurn; if not, call all other player to decide
+        if currentPlayer.playerState != .end {
+            otherPlayerDecides(current: currentPlayer)
+        } else {
+            nextTurn(roundCompletion)
         }
     }
 }
