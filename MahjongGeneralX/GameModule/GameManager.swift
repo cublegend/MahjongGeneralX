@@ -10,32 +10,9 @@ import MahjongCore
 import MahjongCommons
 import MahjongAnalyzer
 
-struct PlayerDecision {
-    let label: PlayerCommand
-    let decision: ()->Void
-    
-    init(_ label: PlayerCommand, decision: @escaping () -> Void) {
-        self.label = label
-        self.decision = decision
-    }
-}
-
 protocol IDecisionProcessor {
     func submitDecision(for player: IPlayerController, decision: PlayerDecision)
     func submitCompletion(for player: IPlayerController)
-}
-
-/// The interface that GameManager interacts with
-protocol IPlayerController {
-    var playerID: String {get}
-    var playerState: PlayerState {get}
-    var basePlayer: Player {get}
-    var switchTiles:[MahjongEntity]{get}
-    var decisionProcessor: IDecisionProcessor{get}
-    func takeTurn(state: PlayerState, completion: @escaping () -> Void)
-    func askPlayerToDecide(discarded: MahjongEntity)
-    func askPlayerToChooseSwitchTiles()
-    func askPlayerToChooseDiscardType()
 }
 
 class GameManager: IDecisionProcessor {
@@ -45,28 +22,28 @@ class GameManager: IDecisionProcessor {
     var currentTurn = 0
     var gameState: GameState = .gameWaitToStart
     var players: [IPlayerController] = []
-    var playerDecisions: [String:PlayerDecision] = [:]
+    var playerDecisions: [String: PlayerDecision] = [:]
     var playerCompletions: Set<String> = []
     var currentPlayerIndex: Int = 0
-    
-    // FIXME: Bloody only stuff
+
+    // TODO: Bloody only stuff
     var switchOrder: SwitchOrder = .switchOrderFront
-    
+
     init(players: [IPlayerController], mahjongSet: MahjongSet, style: IMahjongStyle, table: TableEntity) {
         self.mahjongSet = mahjongSet
         self.players = players
         self.style = style
         self.table = table
     }
-    
+
     // MARK: Core logic
-    
-    func nextTurn(_ completion: @escaping ()->Void) {
+
+    func nextTurn(_ completion: @escaping () -> Void) {
         currentTurn += 1
         currentPlayerIndex = (currentPlayerIndex + 1) % players.count
         players[currentPlayerIndex].takeTurn(state: PlayerState.roundDraw, completion: completion)
     }
-    
+
     /// Used for players to submit their decision
     /// When all decisions are received, they will be filtered.
     /// If only hu decisions are submitted, all hu decisions are process
@@ -74,7 +51,7 @@ class GameManager: IDecisionProcessor {
     /// else process pong
     func submitDecision(for player: IPlayerController, decision: PlayerDecision) {
         playerDecisions[player.playerID] = decision
-        
+
         // When all decisions have been submitted, process them
         if playerDecisions.count == players.count {
             // Determine the presence of specific decisions
@@ -93,11 +70,11 @@ class GameManager: IDecisionProcessor {
             for decision in filteredDecisions {
                 decision.decision()
             }
-            
+
             playerDecisions.removeAll()
         }
     }
-    
+
     func submitCompletion(for player: any IPlayerController) {
         playerCompletions.insert(player.playerID)
         if playerCompletions.count == players.count {
@@ -113,7 +90,7 @@ class GameManager: IDecisionProcessor {
             playerCompletions.removeAll()
         }
     }
-    
+
     func otherPlayerDecides(current: IPlayerController) {
         for player in players {
             if player.playerID == current.playerID { continue }
@@ -122,25 +99,28 @@ class GameManager: IDecisionProcessor {
             current.askPlayerToDecide(discarded: mahjongSet.lastTileDiscarded!)
         }
     }
-    
+
     // MARK: starts game
-    
+
     /// This method is called once per game when entering game room
     /// NOT once per new mahjong game inside a room
     func startGame() {
         // Initialize bots if not enough players
         fillSeatsWithBots()
     }
-    
-    // FIXME: put into bot manager logic
+
+    // TODO: put into bot manager logic
     func fillSeatsWithBots() {
         let nonBotCount = players.count
         if nonBotCount < 4 {
-            for i in nonBotCount..<4 {
-                let seat = getPlayerSeat(withIndex: i)
-                let id = "Bot\(i)"
+            for idx in nonBotCount..<4 {
+                let seat = getPlayerSeat(withIndex: idx)
+                let id = "Bot\(idx)"
                 mahjongSet.discardPile[id] = []
-                let newPlayer = Player(playerId: id, seat: seat, table: table, mahjongSet: mahjongSet, discardPile: mahjongSet.discardPile[id]!, style: style)
+                let newPlayer = Player(playerId: id, seat: seat, 
+                                       table: table, mahjongSet: mahjongSet,
+                                       discardPile: mahjongSet.discardPile[id]!,
+                                       style: style)
                 let newController = BotController(basePlayer: newPlayer, decisionProcessor: self)
                 players.append(newController)
             }

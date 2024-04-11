@@ -10,24 +10,23 @@ import MahjongCommons
 import MahjongCore
 import MahjongAnalyzer
 
-/// This enum encapsulates common actions a player needs to do when making a decision
-enum PlayerCommand: String {
-    case draw
-    case discard
-    case hu
-    case zimo
-    case kang
-    case selfKang
-    case pong
-    case pass
-    
-    var name: String { rawValue }
+/// The interface that GameManager interacts with
+protocol IPlayerController {
+    var playerID: String {get}
+    var playerState: PlayerState {get}
+    var basePlayer: Player {get}
+    var switchTiles: [MahjongEntity] {get}
+    var decisionProcessor: IDecisionProcessor {get}
+    func takeTurn(state: PlayerState, completion: @escaping () -> Void)
+    func askPlayerToDecide(discarded: MahjongEntity)
+    func askPlayerToChooseSwitchTiles()
+    func askPlayerToChooseDiscardType()
 }
 
 /// Some shared logics for all player controllers are defined here
 /// Some default implementation for protocol methods also defined here
 extension IPlayerController {
-    func _createThenExecuteCommand(_ type: PlayerCommand, tile: MahjongEntity? = nil) {
+    fileprivate func _createThenExecuteCommand(_ type: PlayerCommand, tile: MahjongEntity? = nil) {
         switch type {
         case .hu:
             let command = HuCommand(player: basePlayer, mahjong: tile!, zimo: false)
@@ -52,15 +51,422 @@ extension IPlayerController {
             return
         }
     }
-    
+
     /// This function is used internally to process all the decisions player made
     /// When a decisionProcessor is present, the function will pass the decision to the processor
-    func _processDecision(_ decision: PlayerDecision) {
+    fileprivate func _processDecision(_ decision: PlayerDecision) {
         // if .roundDraw, only this player will decide
         if playerState == .roundDraw {
             decision.decision()
             return
         }
         decisionProcessor.submitDecision(for: self, decision: decision)
+    }
+}
+
+class BotController: IPlayerController {
+    let playerID: String
+    let basePlayer: Player
+    let mahjongSet: MahjongSet
+    let decisionProcessor: IDecisionProcessor
+    var playerState: PlayerState = .playerWaitToStart
+
+    // TODO: Bloody only logic
+    var switchTiles: [MahjongEntity] = []
+    var switchType: MahjongType?
+    let switchTileNum = 3
+
+    init(basePlayer: Player, decisionProcessor: IDecisionProcessor) {
+        self.basePlayer = basePlayer
+        self.mahjongSet = basePlayer.mahjongSet
+        self.decisionProcessor = decisionProcessor
+        self.playerID = basePlayer.playerID
+    }
+
+    // MARK: protocol implementation
+    
+    func askPlayerToChooseSwitchTiles() {
+        guard playerState.transition(to: .decideSwitchTiles) else { return }
+        var suitCount: [MahjongType?: Int] = [:]
+        for tile in basePlayer.closeHand {
+            suitCount[tile.mahjongType] = suitCount[tile.mahjongType, default: 0] + 1
+        }
+        // this should never be null
+        let suit = suitCount.sorted(by: {$0.value < $1.value}).first(where: {$0.value >= 3})?.key
+
+        // pick 3 tiles
+        switchTiles = Array(basePlayer.closeHand.filter({$0.mahjongType == suit})[...2])
+
+        decisionProcessor.submitCompletion(for: self)
+    }
+
+    func askPlayerToChooseDiscardType() {
+        guard playerState.transition(to: .decideDiscardSuit) else { return }
+        var suitCount: [MahjongType?: Int] = [:]
+        for tile in basePlayer.closeHand {
+            suitCount[tile.mahjongType] = suitCount[tile.mahjongType, default: 0] + 1
+        }
+
+        // this should never be null
+        let type = suitCount.sorted(by: {$0.value < $1.value}).first?.key ?? .Tiao
+        basePlayer.setDiscardType(type)
+
+        decisionProcessor.submitCompletion(for: self)
+    }
+    
+    func askPlayerToDecide(discarded: MahjongEntity) {
+        guard playerState.transition(to: .roundDecision) else {
+            print("\(playerID) \(playerState) Not equal roundDecision state!")
+            return
+        }
+
+        // save decision in a variable and pass to the process function
+        // nothing declared here will run!
+        let decision: PlayerDecision
+        if basePlayer.canHu(discarded) {
+            decision = PlayerDecision(.hu) {
+                self._createThenExecuteCommand(.hu, tile: discarded)
+                self.playerState.transition(to: .end)
+            }
+        } else if basePlayer.canKang(discarded) {
+            decision = PlayerDecision(.kang) {
+                self._createThenExecuteCommand(.kang, tile: discarded)
+                guard let tile = self.mahjongSet.drawLastTile() else {
+                    print("Game ended")
+                    return
+                }
+                self.playerState.transition(to: .roundDraw)
+                self._createThenExecuteCommand(.draw, tile: tile)
+                self._checkThenProcessBotDrawDecision()
+            }
+        } else if basePlayer.canPong(discarded) {
+            decision = PlayerDecision(.pong) {
+                self._createThenExecuteCommand(.pong, tile: discarded)
+                self._processBotDiscard()
+            }
+        } else {
+            decision =  PlayerDecision(.pass) {}
+        }
+        _processDecision(decision)
+    }
+
+    func takeTurn(state: PlayerState, completion: @escaping () -> Void) {
+        switch state {
+        case .initDraw:
+            playerState.transition(to: .initDraw)
+            for _ in 0..<4 {
+                if basePlayer.closeHand.count == 13 {
+                    decisionProcessor.submitCompletion(for: self)
+                }
+                guard let tile = mahjongSet.draw() else {
+                    fatalError("init draw not possible to be nil!")
+                }
+                _createThenExecuteCommand(.draw, tile: tile)
+            }
+        case .roundDraw:
+            guard let tile = mahjongSet.draw() else {
+                print("Game ended")
+                return
+            }
+            playerState.transition(to: .roundDraw)
+            _createThenExecuteCommand(.draw, tile: tile)
+            _checkThenProcessBotDrawDecision()
+        default:
+            print("\(playerID) has nothing to take turn in \(playerState)")
+        }
+        completion()
+    }
+    
+    // MARK: private methods
+
+    /// This method should be called WITHIN .roundDraw state AFTER drawing action
+    /// Therefore the playerState should already be in .roundDraw
+    private func _checkThenProcessBotDrawDecision() {
+        guard playerState == .roundDraw else {
+            print("\(playerID) \(playerState) Not equal roundDraw state!")
+            return
+        }
+
+        // save decision in a variable and pass to the process function
+        // nothing declared here will run!
+        let decision: PlayerDecision
+        if basePlayer.canZimo() {
+            decision = PlayerDecision(.hu) {
+                self._createThenExecuteCommand(.zimo)
+                self.playerState.transition(to: .end)
+            }
+        } else if basePlayer.canSelfKang() {
+            decision = PlayerDecision(.kang) {
+                guard let tile = self.mahjongSet.drawLastTile() else {
+                    print("Game ended")
+                    return
+                }
+                self._createThenExecuteCommand(.selfKang, tile: self.basePlayer.possibleKangTiles[0])
+
+                self.playerState.transition(to: .roundDraw)
+                self._createThenExecuteCommand(.draw, tile: tile)
+                self._checkThenProcessBotDrawDecision()
+            }
+        } else {
+            decision = PlayerDecision(.pass) {
+                // if nothing to do, proceed to discard
+                self._processBotDiscard()
+            }
+        }
+        _processDecision(decision)
+    }
+
+    private func _processBotDiscard() {
+        guard playerState.transition(to: .roundDiscard) else { return }
+
+        let tile = _botFindDiscard()
+        _createThenExecuteCommand(.discard, tile: tile)
+    }
+
+    private func _botFindDiscard() -> MahjongEntity {
+        if !basePlayer.discardTypeTiles.isEmpty {
+            return basePlayer.discardTypeTiles[0]
+        }
+        var tempHand = Array(basePlayer.closeHand)
+        let numCompleteSet = basePlayer.numCompleteSet
+        var shanten = basePlayer.style.calculateShanten(closeHand: tempHand, completeSets: numCompleteSet)
+        var bestTile = tempHand.randomElement()!
+        for tile in basePlayer.closeHand {
+            tempHand.removeAll(where: {$0 == tile})
+            let newShanten = basePlayer.style.calculateShanten(closeHand: tempHand, completeSets: numCompleteSet)
+            // the <= ensures that at least bots will not worsen their hand
+            if newShanten <= shanten {
+                bestTile = tile
+                shanten = newShanten
+            }
+            tempHand.append(tile)
+        }
+        return bestTile
+    }
+}
+
+class LocalPlayerController: IPlayerController {
+    let playerID: String
+    let basePlayer: Player
+    let mahjongSet: MahjongSet
+    let decisionProcessor: IDecisionProcessor
+    var playerState: PlayerState = .playerWaitToStart
+    var delayedCompletion: () -> Void = {}
+
+    // TODO: Bloody only logic
+    var switchTiles: [MahjongEntity] = []
+    var switchType: MahjongType?
+    let switchTileNum = 3
+
+    // MARK: View flags
+    var canPong = false
+    var canHu = false
+    var canKang = false
+    var decisionNeeded: Bool { canHu || canKang || canPong }
+
+    init(basePlayer: Player, decisionProcessor: IDecisionProcessor) {
+        self.basePlayer = basePlayer
+        self.mahjongSet = basePlayer.mahjongSet
+        self.decisionProcessor = decisionProcessor
+        self.playerID = basePlayer.playerID
+    }
+    
+    // MARK: protocol methods
+
+    func takeTurn(state: PlayerState, completion: @escaping () -> Void) {
+        switch state {
+        case .initDraw:
+            playerState.transition(to: .initDraw)
+            for _ in 0..<4 {
+                if basePlayer.closeHand.count == 13 {
+                    decisionProcessor.submitCompletion(for: self)
+                }
+                guard let tile = mahjongSet.draw() else {
+                    fatalError("init draw not possible to be nil!")
+                }
+                _createThenExecuteCommand(.draw, tile: tile)
+            }
+        case .roundDraw:
+            guard let tile = mahjongSet.draw() else {
+                print("Game ended")
+                return
+            }
+            playerState.transition(to: .roundDraw)
+            _createThenExecuteCommand(.draw, tile: tile)
+            _checkPlayerDrawDecision()
+        default:
+            print("\(playerID) has nothing to take turn in \(playerState)")
+        }
+
+        // delay the completion for later
+        delayedCompletion = completion
+    }
+
+    func askPlayerToDecide(discarded: MahjongEntity) {
+        guard playerState.transition(to: .roundDecision) else { return }
+
+        resetFlags()
+        canHu = basePlayer.canHu(discarded)
+        canPong = basePlayer.canPong(discarded)
+        canKang = basePlayer.canKang(discarded)
+
+        if !decisionNeeded {
+            // pass, but still needs to submit!
+            _processDecision(PlayerDecision(.pass) {})
+        }
+    }
+
+    func askPlayerToChooseDiscardType() {
+        guard playerState.transition(to: .decideDiscardSuit) else { return }
+    }
+
+    func askPlayerToChooseSwitchTiles() {
+        // switch state, then the view will be notified and starts picking
+        // switch tiles.
+        guard playerState.transition(to: .decideSwitchTiles) else { return }
+    }
+    
+    // MARK: private methods
+
+    private func _checkPlayerDrawDecision() {
+        guard playerState == .roundDraw else { return }
+
+        resetFlags()
+        canHu = basePlayer.canZimo()
+        canKang = basePlayer.canSelfKang()
+
+        if !decisionNeeded {
+            _askPlayerToDiscardTile()
+        }
+    }
+
+    private func _askPlayerToDiscardTile() {
+        // signal the view for a discard tile
+        guard playerState.transition(to: .roundDiscard) else { return }
+    }
+    
+    private func resetFlags() {
+        canHu = false
+        canKang = false
+        canPong = false
+    }
+
+    // MARK: View interface
+    public func processDiscardDecision(ofType type: PlayerCommand, discarded: MahjongEntity?) {
+        // save decision in a variable and pass to the process function
+        // nothing declared here will run!
+        let decision: PlayerDecision
+        switch type {
+        case .hu:
+            decision = PlayerDecision(.hu) {
+                self._createThenExecuteCommand(.hu, tile: discarded)
+                self.playerState.transition(to: .end)
+            }
+        case .kang:
+            decision = PlayerDecision(.kang) {
+                self._createThenExecuteCommand(.kang, tile: discarded)
+                guard let tile = self.mahjongSet.drawLastTile() else {
+                    print("Game ended")
+                    return
+                }
+                self.playerState.transition(to: .roundDraw)
+                self._createThenExecuteCommand(.draw, tile: tile)
+                self._checkPlayerDrawDecision()
+            }
+        case .pong:
+            decision = PlayerDecision(.pong) {
+                self._createThenExecuteCommand(.pong, tile: discarded)
+                self._askPlayerToDiscardTile()
+            }
+        case .pass:
+            decision =  PlayerDecision(.pass) {}
+        default:
+            return
+        }
+        _processDecision(decision)
+    }
+
+    public func processDrawDecision(ofType type: PlayerCommand, tile: MahjongEntity?) {
+        // save decision in a variable and pass to the process function
+        // nothing declared here will run!
+        let decision: PlayerDecision
+        switch type {
+        case .zimo:
+            decision = PlayerDecision(.zimo) {
+                self._createThenExecuteCommand(.zimo)
+                self.playerState.transition(to: .end)
+            }
+        case .selfKang:
+            decision = PlayerDecision(.selfKang) {
+                self._createThenExecuteCommand(.kang, tile: tile)
+                guard let drawTile = self.mahjongSet.drawLastTile() else {
+                    print("Game ended")
+                    return
+                }
+                self.playerState.transition(to: .roundDraw)
+                self._createThenExecuteCommand(.draw, tile: drawTile)
+                self._checkPlayerDrawDecision()
+            }
+        case .pass:
+            decision =  PlayerDecision(.pass) {}
+        default:
+            return
+        }
+        _processDecision(decision)
+    }
+
+    public func processDecideType(_ type: MahjongType) {
+        basePlayer.setDiscardType(type)
+        decisionProcessor.submitCompletion(for: self)
+    }
+
+    public func onClickedMahjong(_ tile: MahjongEntity) {
+        switch playerState {
+        case .initDraw:
+            return // will be draw
+        case .decideSwitchTiles:
+            processSwitchTiles(tile)
+        case .roundDraw:
+            return // will be draw
+        case .roundDiscard:
+            processDiscardTile(tile)
+        default:
+            return
+        }
+    }
+
+    private func processDiscardTile(_ mahjong: MahjongEntity) {
+        if basePlayer.canDiscardTile(mahjong: mahjong) {
+            _createThenExecuteCommand(.discard, tile: mahjong)
+            // discard a tile signals the end of a turn
+            delayedCompletion()
+            delayedCompletion = {}
+        }
+    }
+
+    private func processSwitchTiles(_ mahjong: MahjongEntity) {
+        guard playerState == .decideSwitchTiles else {
+            return
+        }
+
+        // if idx is not nil, we remove the already selected mahjong
+        if let idx = switchTiles.firstIndex(of: mahjong) {
+            switchTiles.remove(at: idx)
+            mahjong.isSelected = false
+        } else {
+            // else we add it in if it is the same as the other tile types
+            // or if no tiles have been chosen
+            if switchTiles.isEmpty {
+                switchType = mahjong.mahjongType
+            } else if mahjong.mahjongType != switchType {
+                return // not valid, nothing to change
+            }
+            mahjong.isSelected = true
+            switchTiles.append(mahjong)
+        }
+
+        if switchTiles.count >= switchTileNum {
+            decisionProcessor.submitCompletion(for: self)
+        }
     }
 }
