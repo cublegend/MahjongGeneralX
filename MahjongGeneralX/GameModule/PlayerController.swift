@@ -11,7 +11,7 @@ import MahjongCore
 import MahjongAnalyzer
 
 /// This enum encapsulates common actions a player needs to do when making a decision
-enum PlayerCommand {
+enum PlayerCommand: String {
     case draw
     case discard
     case hu
@@ -19,6 +19,9 @@ enum PlayerCommand {
     case kang
     case selfKang
     case pong
+    case pass
+    
+    var name: String { rawValue }
 }
 
 /// Some shared logics for all player controllers are defined here
@@ -45,10 +48,19 @@ extension IPlayerController {
             Commands.executeCommand(DrawCommand(player: basePlayer, mahjong: tile!))
         case .discard:
             Commands.executeCommand(DiscardCommand(player: basePlayer, mahjong: tile!))
+        case .pass:
+            return
         }
     }
     
-    func setDiscardType(_ type: MahjongType) {
-        basePlayer.setDiscardType(type)
+    /// This function is used internally to process all the decisions player made
+    /// When a decisionProcessor is present, the function will pass the decision to the processor
+    func _processDecision(_ decision: PlayerDecision) {
+        // if .roundDraw, only this player will decide
+        if playerState == .roundDraw {
+            decision.decision()
+            return
+        }
+        decisionProcessor.submitDecision(for: self, decision: decision)
     }
 }

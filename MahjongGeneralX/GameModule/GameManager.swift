@@ -11,20 +11,13 @@ import MahjongCommons
 import MahjongAnalyzer
 
 struct PlayerDecision {
-    let label: PlayerDecisionLabel
+    let label: PlayerCommand
     let decision: ()->Void
     
-    init(_ label: PlayerDecisionLabel, decision: @escaping () -> Void) {
+    init(_ label: PlayerCommand, decision: @escaping () -> Void) {
         self.label = label
         self.decision = decision
     }
-}
-
-enum PlayerDecisionLabel {
-    case hu
-    case kang
-    case pong
-    case pass
 }
 
 protocol IDecisionProcessor {
@@ -38,6 +31,7 @@ protocol IPlayerController {
     var playerState: PlayerState {get}
     var basePlayer: Player {get}
     var switchTiles:[MahjongEntity]{get}
+    var decisionProcessor: IDecisionProcessor{get}
     func takeTurn(state: PlayerState, completion: @escaping () -> Void)
     func askPlayerToDecide(discarded: MahjongEntity)
     func askPlayerToChooseSwitchTiles()

@@ -52,7 +52,7 @@ class BotController: IPlayerController {
         
         // this should never be null
         let type = suitCount.sorted(by: {$0.value < $1.value}).first?.key ?? .Tiao
-        setDiscardType(type)
+        basePlayer.setDiscardType(type)
         
         decisionProcessor.submitCompletion(for: self)
     }
@@ -120,17 +120,6 @@ class BotController: IPlayerController {
             }
         }
         _processDecision(decision)
-    }
-    
-    /// This function is used internally to process all the decisions player made
-    /// When a decisionProcessor is present, the function will pass the decision to the processor
-    func _processDecision(_ decision: PlayerDecision) {
-        // if .roundDraw, only this player will decide
-        if playerState == .roundDraw {
-            decision.decision()
-            return
-        }
-        decisionProcessor.submitDecision(for: self, decision: decision)
     }
     
     func askPlayerToDecide(discarded: MahjongEntity) {
