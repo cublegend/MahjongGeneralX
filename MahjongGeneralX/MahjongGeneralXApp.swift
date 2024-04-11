@@ -1,6 +1,6 @@
 //
 //  MahjongGeneralXApp.swift
-//  MahjongGenerallX
+//  MahjongGeneralX
 //
 //  Created by Katherine Xiong on 4/9/24.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct MahjongGenerallXApp: App {
+struct MahjongGeneralXApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

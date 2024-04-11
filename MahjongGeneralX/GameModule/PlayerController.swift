@@ -124,12 +124,14 @@ class BotController: IPlayerController {
         // nothing declared here will run!
         let decision: PlayerDecision
         if basePlayer.canHu(discarded) {
-            decision = PlayerDecision(.hu) {
+            decision = PlayerDecision(.hu) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.hu, tile: discarded)
                 self.playerState.transition(to: .end)
             }
         } else if basePlayer.canKang(discarded) {
-            decision = PlayerDecision(.kang) {
+            decision = PlayerDecision(.kang) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.kang, tile: discarded)
                 guard let tile = self.mahjongSet.drawLastTile() else {
                     print("Game ended")
@@ -140,7 +142,8 @@ class BotController: IPlayerController {
                 self._checkThenProcessBotDrawDecision()
             }
         } else if basePlayer.canPong(discarded) {
-            decision = PlayerDecision(.pong) {
+            decision = PlayerDecision(.pong) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.pong, tile: discarded)
                 self._processBotDiscard()
             }
@@ -191,12 +194,14 @@ class BotController: IPlayerController {
         // nothing declared here will run!
         let decision: PlayerDecision
         if basePlayer.canZimo() {
-            decision = PlayerDecision(.hu) {
+            decision = PlayerDecision(.hu) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.zimo)
                 self.playerState.transition(to: .end)
             }
         } else if basePlayer.canSelfKang() {
-            decision = PlayerDecision(.kang) {
+            decision = PlayerDecision(.kang) { [weak self] in
+                guard let self = self else { return }
                 guard let tile = self.mahjongSet.drawLastTile() else {
                     print("Game ended")
                     return
@@ -358,12 +363,14 @@ class LocalPlayerController: IPlayerController {
         let decision: PlayerDecision
         switch type {
         case .hu:
-            decision = PlayerDecision(.hu) {
+            decision = PlayerDecision(.hu) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.hu, tile: discarded)
                 self.playerState.transition(to: .end)
             }
         case .kang:
-            decision = PlayerDecision(.kang) {
+            decision = PlayerDecision(.kang) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.kang, tile: discarded)
                 guard let tile = self.mahjongSet.drawLastTile() else {
                     print("Game ended")
@@ -374,7 +381,8 @@ class LocalPlayerController: IPlayerController {
                 self._checkPlayerDrawDecision()
             }
         case .pong:
-            decision = PlayerDecision(.pong) {
+            decision = PlayerDecision(.pong) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.pong, tile: discarded)
                 self._askPlayerToDiscardTile()
             }
@@ -392,12 +400,14 @@ class LocalPlayerController: IPlayerController {
         let decision: PlayerDecision
         switch type {
         case .zimo:
-            decision = PlayerDecision(.zimo) {
+            decision = PlayerDecision(.zimo) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.zimo)
                 self.playerState.transition(to: .end)
             }
         case .selfKang:
-            decision = PlayerDecision(.selfKang) {
+            decision = PlayerDecision(.selfKang) { [weak self] in
+                guard let self = self else { return }
                 self._createThenExecuteCommand(.kang, tile: tile)
                 guard let drawTile = self.mahjongSet.drawLastTile() else {
                     print("Game ended")
