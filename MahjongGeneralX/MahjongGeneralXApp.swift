@@ -32,9 +32,9 @@ struct MahjongGeneralXApp: App {
         }
         .windowResizability(.contentSize)
         .windowStyle(.plain)
-        .onChange(of: appState.appPhase == .game) {
-            dismissWindow(id: UIIdentifier.entryPoint)
-        }
+//        .onChange(of: appState.appPhase == .game) {
+//            dismissWindow(id: UIIdentifier.entryPoint)
+//        }
 
         ImmersiveSpace(id: UIIdentifier.gameModule) {
             if ModelLoader.didFinishLoading {
@@ -42,9 +42,9 @@ struct MahjongGeneralXApp: App {
                     .environment(appState)
             }
         }
-        .onChange(of: appState.appPhase == .welcome) {
-            openWindow(id: UIIdentifier.entryPoint)
-        }
+//        .onChange(of: appState.appPhase == .welcome) {
+//            openWindow(id: UIIdentifier.entryPoint)
+//        }
 //        .onChange(of: scenePhase, initial: true) {
 //            if scenePhase != .active {
 //                // Leave the immersive space when the user dismisses the app.

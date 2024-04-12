@@ -17,7 +17,7 @@ protocol IPlayerController {
     var basePlayer: Player {get}
     var switchTiles: [MahjongEntity] {get}
     var decisionProcessor: IDecisionProcessor {get}
-    func takeTurn(state: PlayerState, completion: @escaping () -> Void)
+    func takeTurn(state: PlayerState)
     func askPlayerToDecide(discarded: MahjongEntity)
     func askPlayerToChooseSwitchTiles()
     func askPlayerToChooseDiscardType()
@@ -48,6 +48,9 @@ extension IPlayerController {
         case .discard:
             Commands.executeCommand(DiscardCommand(player: basePlayer, mahjong: tile!))
         case .pass:
+            return
+        default:
+            print("\(type.name) not handled")
             return
         }
     }
@@ -97,7 +100,7 @@ class BotController: IPlayerController {
         // pick 3 tiles
         switchTiles = Array(basePlayer.closeHand.filter({$0.mahjongType == suit})[...2])
 
-        decisionProcessor.submitCompletion(for: self)
+        decisionProcessor.submitCompletion(for: self, type: .switchTile)
     }
 
     func askPlayerToChooseDiscardType() {
@@ -111,7 +114,7 @@ class BotController: IPlayerController {
         let type = suitCount.sorted(by: {$0.value < $1.value}).first?.key ?? .Tiao
         basePlayer.setDiscardType(type)
 
-        decisionProcessor.submitCompletion(for: self)
+        decisionProcessor.submitCompletion(for: self, type: .chooseDiscard)
     }
     
     func askPlayerToDecide(discarded: MahjongEntity) {
@@ -153,19 +156,21 @@ class BotController: IPlayerController {
         _processDecision(decision)
     }
 
-    func takeTurn(state: PlayerState, completion: @escaping () -> Void) {
+    func takeTurn(state: PlayerState) {
         switch state {
         case .initDraw:
-            playerState.transition(to: .initDraw)
+            guard playerState.transition(to: .initDraw) else { return }
             for _ in 0..<4 {
                 if basePlayer.closeHand.count == 13 {
-                    decisionProcessor.submitCompletion(for: self)
+                    break
                 }
                 guard let tile = mahjongSet.draw() else {
                     fatalError("init draw not possible to be nil!")
                 }
+                print("\(playerID) draw \(tile.name)")
                 _createThenExecuteCommand(.draw, tile: tile)
             }
+            decisionProcessor.submitCompletion(for: self, type: .draw)
         case .roundDraw:
             guard let tile = mahjongSet.draw() else {
                 print("Game ended")
@@ -177,7 +182,6 @@ class BotController: IPlayerController {
         default:
             print("\(playerID) has nothing to take turn in \(playerState)")
         }
-        completion()
     }
     
     // MARK: private methods
@@ -226,6 +230,7 @@ class BotController: IPlayerController {
 
         let tile = _botFindDiscard()
         _createThenExecuteCommand(.discard, tile: tile)
+        decisionProcessor.submitCompletion(for: self, type: .discard)
     }
 
     private func _botFindDiscard() -> MahjongEntity {
@@ -256,7 +261,6 @@ class LocalPlayerController: IPlayerController {
     let mahjongSet: MahjongSet
     let decisionProcessor: IDecisionProcessor
     var playerState: PlayerState = .playerWaitToStart
-    var delayedCompletion: () -> Void = {}
 
     // TODO: Bloody only logic
     var switchTiles: [MahjongEntity] = []
@@ -279,19 +283,21 @@ class LocalPlayerController: IPlayerController {
     
     // MARK: protocol methods
 
-    func takeTurn(state: PlayerState, completion: @escaping () -> Void) {
+    func takeTurn(state: PlayerState) {
         switch state {
         case .initDraw:
-            playerState.transition(to: .initDraw)
+            guard playerState.transition(to: .initDraw) else { return }
             for _ in 0..<4 {
                 if basePlayer.closeHand.count == 13 {
-                    decisionProcessor.submitCompletion(for: self)
+                    break
                 }
                 guard let tile = mahjongSet.draw() else {
                     fatalError("init draw not possible to be nil!")
                 }
+                print("\(playerID) draw \(tile.name), \(basePlayer.closeHand.count)")
                 _createThenExecuteCommand(.draw, tile: tile)
             }
+            decisionProcessor.submitCompletion(for: self, type: .draw)
         case .roundDraw:
             guard let tile = mahjongSet.draw() else {
                 print("Game ended")
@@ -303,9 +309,6 @@ class LocalPlayerController: IPlayerController {
         default:
             print("\(playerID) has nothing to take turn in \(playerState)")
         }
-
-        // delay the completion for later
-        delayedCompletion = completion
     }
 
     func askPlayerToDecide(discarded: MahjongEntity) {
@@ -428,7 +431,7 @@ class LocalPlayerController: IPlayerController {
 
     public func processDecideType(_ type: MahjongType) {
         basePlayer.setDiscardType(type)
-        decisionProcessor.submitCompletion(for: self)
+        decisionProcessor.submitCompletion(for: self, type: .chooseDiscard)
     }
 
     public func onClickedMahjong(_ tile: MahjongEntity) {
@@ -449,9 +452,7 @@ class LocalPlayerController: IPlayerController {
     private func processDiscardTile(_ mahjong: MahjongEntity) {
         if basePlayer.canDiscardTile(mahjong: mahjong) {
             _createThenExecuteCommand(.discard, tile: mahjong)
-            // discard a tile signals the end of a turn
-            delayedCompletion()
-            delayedCompletion = {}
+            decisionProcessor.submitCompletion(for: self, type: .discard)
         }
     }
 
@@ -477,7 +478,7 @@ class LocalPlayerController: IPlayerController {
         }
 
         if switchTiles.count >= switchTileNum {
-            decisionProcessor.submitCompletion(for: self)
+            decisionProcessor.submitCompletion(for: self, type: .switchTile)
         }
     }
 }

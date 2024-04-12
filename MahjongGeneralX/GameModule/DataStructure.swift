@@ -21,6 +21,8 @@ struct PlayerDecision {
 enum PlayerCommand: String {
     case draw
     case discard
+    case switchTile
+    case chooseDiscard
     case hu
     case zimo
     case kang
@@ -82,7 +84,6 @@ public enum PlayerState: String, Codable, Sendable, Equatable {
     case roundDraw
     case roundDiscard
     case roundDecision
-    case idle
     case end
 
     /// Returns `True` if it's possible to transition to the specified phase from the currrent one.
@@ -91,21 +92,19 @@ public enum PlayerState: String, Codable, Sendable, Equatable {
         case .playerWaitToStart:
             return [.initDraw, .playerWaitToStart].contains(phase)
         case .initDraw:
-            return [.decideSwitchTiles, .playerWaitToStart].contains(phase)
+            return [.initDraw, .decideSwitchTiles, .playerWaitToStart].contains(phase)
         case .decideSwitchTiles:
-            return [.idle, .decideDiscardSuit, .playerWaitToStart].contains(phase)
+            return [.decideDiscardSuit, .playerWaitToStart].contains(phase)
         case .decideDiscardSuit:
-            return [.idle, .roundDraw, .roundDecision, .playerWaitToStart].contains(phase)
+            return [.roundDraw, .roundDecision, .playerWaitToStart].contains(phase)
         case .roundDraw:
-            return [.idle, .roundDiscard, .roundDraw, .end, .playerWaitToStart].contains(phase)
+            return [.roundDiscard, .roundDraw, .end, .playerWaitToStart].contains(phase)
         case .roundDiscard:
-            return [.idle, .roundDecision, .playerWaitToStart].contains(phase)
+            return [.roundDecision, .playerWaitToStart].contains(phase)
         case .roundDecision:
-            return [.idle, .roundDraw, .roundDiscard, .end, .playerWaitToStart].contains(phase)
+            return [.roundDraw, .roundDiscard, .end, .playerWaitToStart].contains(phase)
         case .end:
             return [.end, .playerWaitToStart].contains(phase)
-        case .idle:
-            return true
         }
     }
 

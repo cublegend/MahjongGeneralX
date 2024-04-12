@@ -31,12 +31,7 @@ extension GameManager {
 
     public func startGame() {
         guard gameState.transition(to: .initialDraw) else { return }
-        nextTurn(initDrawCompletion)
-    }
-
-    func initDrawCompletion() {
-        // placeholder, not required
-        nextTurn(initDrawCompletion)
+        nextTurn(state: .initDraw)
     }
 
     // MARK: .switchTiles
@@ -83,16 +78,6 @@ extension GameManager {
 
     func enterRoundState() {
         guard gameState.transition(to: .round) else { return }
-        nextTurn(roundCompletion)
-    }
-
-    func roundCompletion() {
-        let currentPlayer = players[currentPlayerIndex]
-        // if player hu, nextTurn; if not, call all other player to decide
-        if currentPlayer.playerState != .end {
-            otherPlayerDecides(current: currentPlayer)
-        } else {
-            nextTurn(roundCompletion)
-        }
+        nextTurn(state: .roundDraw)
     }
 }

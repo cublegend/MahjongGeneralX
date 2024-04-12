@@ -12,7 +12,7 @@ import MahjongAnalyzer
 
 protocol IDecisionProcessor {
     func submitDecision(for player: IPlayerController, decision: PlayerDecision)
-    func submitCompletion(for player: IPlayerController)
+    func submitCompletion(for player: IPlayerController, type: PlayerCommand)
 }
 
 @Observable
@@ -81,10 +81,13 @@ class GameManager: IDecisionProcessor {
 
     // MARK: Core logic
 
-    func nextTurn(_ completion: @escaping () -> Void) {
+    /// next player take turn
+    /// when the player completes their turn action
+    /// they should send back a completion notice using submitCompletion
+    func nextTurn(state: PlayerState) {
         currentTurn += 1
         currentPlayerIndex = (currentPlayerIndex + 1) % players.count
-        players[currentPlayerIndex].takeTurn(state: PlayerState.roundDraw, completion: completion)
+        players[currentPlayerIndex].takeTurn(state: state)
     }
 
     /// Used for players to submit their decision
@@ -118,19 +121,36 @@ class GameManager: IDecisionProcessor {
         }
     }
 
-    func submitCompletion(for player: any IPlayerController) {
-        playerCompletions.insert(player.playerID)
-        if playerCompletions.count == players.count {
-            if gameState == .switchTiles {
-                performSwitchTilesAction()
-            } else if gameState == .decideDiscard {
-                enterRoundState()
-            } else if gameState == .initialDraw {
+    /// used to receive player completion notices
+    func submitCompletion(for player: IPlayerController, type: PlayerCommand) {
+        switch type {
+        case .discard:
+            otherPlayerDecides(current: player)
+        case .draw: // this should only be called in init draw
+            // sanity check
+            guard gameState == .initialDraw else { return }
+            if currentTurn == 16 {
                 enterSwitchTileState()
             } else {
-                print("\(gameState) complete! But not handled")
+                nextTurn(state: .initDraw)
             }
-            playerCompletions.removeAll()
+        case .chooseDiscard:
+            playerCompletions.insert(player.playerID)
+            if playerCompletions.count == players.count {
+                enterRoundState()
+                playerCompletions.removeAll()
+            }
+        case .switchTile:
+            playerCompletions.insert(player.playerID)
+            if playerCompletions.count == players.count {
+                performSwitchTilesAction()
+                playerCompletions.removeAll()
+            }
+        case .hu:
+            nextTurn(state: .roundDraw)
+        default:
+            print("\(gameState) complete! But not handled")
+            return
         }
     }
 
