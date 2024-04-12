@@ -18,8 +18,7 @@ enum UIIdentifier {
 struct MahjongGeneralXApp: App {
 
     @State private var appState = AppState()
-
-    @Environment(\.openImmersiveSpace) private var openImmersiveSpace
+    
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismissWindow) private var dismissWindow
@@ -34,10 +33,8 @@ struct MahjongGeneralXApp: App {
         .windowStyle(.plain)
         
         ImmersiveSpace(id: UIIdentifier.gameModule) {
-            if ModelLoader.didFinishLoading {
-                ImmersiveView(placementManager: PlacementManager(), gameManager: GameManager(table: ModelLoader.getTable()))
-                    .environment(appState)
-            }
+            ImmersiveView()
+                .environment(appState)
         }
         .onChange(of: scenePhase, initial: true) {
             if scenePhase != .active {

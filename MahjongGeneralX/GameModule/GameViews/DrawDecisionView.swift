@@ -14,7 +14,6 @@ import MahjongCore
     var body: some View {
         HStack {
             if let localPlayer = gameManager.localPlayer {
-                let mahjongSet = localPlayer.mahjongSet
                 ForEach(localPlayer.possibleKangTiles, content: { tile in
                     Button("Kang \(tile.name)") {
                         localPlayer.processDrawDecision(ofType: .selfKang, tile: tile)

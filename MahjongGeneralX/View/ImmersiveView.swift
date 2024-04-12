@@ -18,12 +18,15 @@ enum AttachmentIDs: Int {
 @MainActor
 struct ImmersiveView: View {
     @Environment(AppState.self) private var appState
-    @State var placementManager: PlacementManager
-    @State var gameManager: GameManager
+    @State var placementManager: PlacementManager = PlacementManager()
+    @State var gameManager: GameManager = GameManager()
     var body: some View {
         let localPlayer = gameManager.localPlayer
         RealityView { content, _ in
             content.add(placementManager.rootEntity)
+            let table = ModelLoader.getTable()
+            placementManager.onModelLoaded(table: table)
+            gameManager.onModelLoaded(table: table)
             placementManager.appState = appState
             Task {
                 await placementManager.runARKitSession()
@@ -98,6 +101,7 @@ struct ImmersiveView: View {
         }
         .onDisappear {
             print("Leaving immersive space.")
+            print(placementManager.rootEntity)
             appState.cleanUpAfterLeavingImmersiveSpace()
         }
     }

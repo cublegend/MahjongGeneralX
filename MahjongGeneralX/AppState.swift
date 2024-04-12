@@ -19,6 +19,7 @@ public class AppState {
     // MARK: - App State
 
     public var appPhase: AppPhase = .welcome
+    public var immersiveViewOpened = false
 
     var immersiveSpaceOpened: Bool { placementManager != nil }
     private(set) weak var placementManager: PlacementManager?

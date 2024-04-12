@@ -35,11 +35,16 @@ class GameManager: IDecisionProcessor {
     var switchOrder: SwitchOrder = .switchOrderFront
 
     // TODO: init(players: [IPlayerController], mahjongSet: MahjongSet, style: IMahjongStyle, table: TableEntity)
-    @MainActor
-    init(table: TableEntity) {
+
+    init() {
         self.mahjongSet = MahjongSet()
+    }
+    
+    @MainActor
+    public func onModelLoaded(table: TableEntity) {
         self.table.append(table)
         table.addChild(mahjongSet.rootEntity)
+        mahjongSet.loadMahjongsIntoMahjongSet()
         createLocalPlayer()
         fillSeatsWithBots()
         enterWaitToStartState()
