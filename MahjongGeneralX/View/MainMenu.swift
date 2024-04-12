@@ -13,6 +13,7 @@ struct MainMenu: View {
     @Environment(AppState.self) private var appState
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+    @Environment(\.dismissWindow) private var dismiss
 
     @State var isShowingSettings = false
     @State var isEnterClicked = false

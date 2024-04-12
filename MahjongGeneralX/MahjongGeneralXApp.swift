@@ -21,6 +21,8 @@ struct MahjongGeneralXApp: App {
 
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
@@ -30,12 +32,18 @@ struct MahjongGeneralXApp: App {
         }
         .windowResizability(.contentSize)
         .windowStyle(.plain)
+        .onChange(of: appState.appPhase == .game) {
+            dismissWindow(id: UIIdentifier.entryPoint)
+        }
 
         ImmersiveSpace(id: UIIdentifier.gameModule) {
             if ModelLoader.didFinishLoading {
                 ImmersiveView(placementManager: PlacementManager(), gameManager: GameManager(table: ModelLoader.getTable()))
                     .environment(appState)
             }
+        }
+        .onChange(of: appState.appPhase == .welcome) {
+            openWindow(id: UIIdentifier.entryPoint)
         }
 //        .onChange(of: scenePhase, initial: true) {
 //            if scenePhase != .active {
