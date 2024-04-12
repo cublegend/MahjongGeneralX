@@ -23,7 +23,6 @@
 		CBEE80682BC889990060DFD9 /* PlacementState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80612BC889990060DFD9 /* PlacementState.swift */; };
 		CBEE80692BC889990060DFD9 /* PlacementManager+Detection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80622BC889990060DFD9 /* PlacementManager+Detection.swift */; };
 		CBEE806A2BC889990060DFD9 /* UserDiscardTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */; };
-		CBEE806B2BC889990060DFD9 /* UserGameMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80642BC889990060DFD9 /* UserGameMenu.swift */; };
 		CBEE806C2BC889990060DFD9 /* UserDecisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80652BC889990060DFD9 /* UserDecisionView.swift */; };
 		CBEE80722BC88A580060DFD9 /* HandDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE806E2BC88A580060DFD9 /* HandDetection.swift */; };
 		CBEE80732BC88A580060DFD9 /* PlaneDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */; };
@@ -57,7 +56,6 @@
 		CBEE80612BC889990060DFD9 /* PlacementState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlacementState.swift; sourceTree = "<group>"; };
 		CBEE80622BC889990060DFD9 /* PlacementManager+Detection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlacementManager+Detection.swift"; sourceTree = "<group>"; };
 		CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDiscardTypeView.swift; sourceTree = "<group>"; };
-		CBEE80642BC889990060DFD9 /* UserGameMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserGameMenu.swift; sourceTree = "<group>"; };
 		CBEE80652BC889990060DFD9 /* UserDecisionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDecisionView.swift; sourceTree = "<group>"; };
 		CBEE806E2BC88A580060DFD9 /* HandDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandDetection.swift; sourceTree = "<group>"; };
 		CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneDetection.swift; sourceTree = "<group>"; };
@@ -152,7 +150,6 @@
 				CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */,
 				CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */,
 				CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */,
-				CBEE80642BC889990060DFD9 /* UserGameMenu.swift */,
 			);
 			path = GameViews;
 			sourceTree = "<group>";
@@ -323,7 +320,6 @@
 				CBEE805C2BC888F00060DFD9 /* MainMenu.swift in Sources */,
 				D01806212BC8F65D00A977D7 /* GameMenu.swift in Sources */,
 				CBEE80682BC889990060DFD9 /* PlacementState.swift in Sources */,
-				CBEE806B2BC889990060DFD9 /* UserGameMenu.swift in Sources */,
 				CBEE80742BC88A580060DFD9 /* WorldDetection.swift in Sources */,
 				CBEE805B2BC888F00060DFD9 /* InfoLabel.swift in Sources */,
 				CBEE80662BC889990060DFD9 /* PlacementManager.swift in Sources */,

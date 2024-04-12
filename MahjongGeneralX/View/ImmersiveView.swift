@@ -12,7 +12,6 @@ import MahjongCore
 enum AttachmentIDs: Int {
     case decisionMenu = 100
     case discardTypeMenu = 101
-    case gameMenu = 102
 }
 
 @MainActor
@@ -32,13 +31,6 @@ struct ImmersiveView: View {
                 await placementManager.runARKitSession()
             }
         } update: { _, attachments in
-            if gameManager.gameState == .round {
-                let menu = attachments.entity(for: AttachmentIDs.gameMenu)
-                menu?.position = PlacementState.attachmentPosition
-            } else {
-                attachments.entity(for: AttachmentIDs.gameMenu)?.removeFromParent()
-            }
-            
             if localPlayer?.playerState == .decideDiscardSuit {
                 let menu = attachments.entity(for: AttachmentIDs.discardTypeMenu)
                 menu?.position = PlacementState.attachmentPosition
@@ -59,10 +51,6 @@ struct ImmersiveView: View {
             }
             Attachment(id: AttachmentIDs.discardTypeMenu) {
                 UserDiscardTypeView()
-                    .environment(gameManager)
-            }
-            Attachment(id: AttachmentIDs.gameMenu) {
-                UserGameMenu()
                     .environment(gameManager)
             }
         }
