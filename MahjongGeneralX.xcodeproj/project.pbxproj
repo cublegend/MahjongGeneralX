@@ -172,13 +172,13 @@
 		D0D0F1D72BC5B3E500D514AF /* MahjongGeneralX */ = {
 			isa = PBXGroup;
 			children = (
+				D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */,
 				CBEE80712BC88A580060DFD9 /* Detection */,
 				CBEE80592BC888F00060DFD9 /* View */,
 				CBEE80512BC888CF0060DFD9 /* AppConfig.swift */,
 				CBEE80502BC888CF0060DFD9 /* AppState.swift */,
 				CBEE804F2BC8730D0060DFD9 /* .swiftlint.yml */,
 				CBA6F73A2BC5D2F20056FA84 /* GameModule */,
-				D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */,
 				D0D0F1E22BC5B3E600D514AF /* Assets.xcassets */,
 				D0D0F1E72BC5B3E600D514AF /* Info.plist */,
 				D0D0F1E42BC5B3E600D514AF /* Preview Content */,
