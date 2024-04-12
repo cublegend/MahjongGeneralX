@@ -10,20 +10,6 @@ import MahjongCore
 
 extension GameManager {
     // MARK: .waitToStart
-
-    /// This method is called once per game when entering game room
-    /// NOT once per new mahjong game inside a room
-    @MainActor
-    public func prepareToStart() {
-//        self.mahjongSet = MahjongSet()
-//        guard let mahjongSet = self.mahjongSet else { return }
-//        self.table.append(table)
-//        table.addChild(mahjongSet.rootEntity)
-        createLocalPlayer()
-        fillSeatsWithBots()
-        enterWaitToStartState()
-    }
-    
     public func enterWaitToStartState() {
         guard gameState.transition(to: .gameWaitToStart) else { return }
         initializeGameData()
@@ -45,12 +31,7 @@ extension GameManager {
 
     public func startGame() {
         guard gameState.transition(to: .initialDraw) else { return }
-        nextTurn(initDrawCompletion)
-    }
-
-    func initDrawCompletion() {
-        // placeholder, not required
-        nextTurn(initDrawCompletion)
+        nextTurn(state: .initDraw)
     }
 
     // MARK: .switchTiles
@@ -97,16 +78,6 @@ extension GameManager {
 
     func enterRoundState() {
         guard gameState.transition(to: .round) else { return }
-        nextTurn(roundCompletion)
-    }
-
-    func roundCompletion() {
-        let currentPlayer = players[currentPlayerIndex]
-        // if player hu, nextTurn; if not, call all other player to decide
-        if currentPlayer.playerState != .end {
-            otherPlayerDecides(current: currentPlayer)
-        } else {
-            nextTurn(roundCompletion)
-        }
+        nextTurn(state: .roundDraw)
     }
 }

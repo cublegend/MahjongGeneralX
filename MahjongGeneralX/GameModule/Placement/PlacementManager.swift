@@ -13,6 +13,7 @@ import SwiftUI
 import simd
 import MahjongCore
 
+@Observable
 public final class PlacementManager {
     // MARK: - Placement
     public var rootEntity: Entity
@@ -22,7 +23,8 @@ public final class PlacementManager {
     let worldTracking = WorldTrackingProvider()
     let planeTracking = PlaneDetectionProvider()
     let handTracking = HandTrackingProvider()
-
+    
+    var tablePlaced = false
     var handDetection: HandDetection
     var worldDetection: WorldDetection
     var planeDetection: PlaneDetection
@@ -86,6 +88,7 @@ public final class PlacementManager {
         // If table successfully placed, store table dimension and location to GameInfo, and loading mahjongs to the table
         if self.performPlaceTable(table: table) {
             logger.info("User successfually placed mahjong")
+            tablePlaced = true
         }
     }
 
