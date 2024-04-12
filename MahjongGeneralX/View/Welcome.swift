@@ -20,7 +20,6 @@ struct Welcome: View {
 
     var body: some View {
         @Bindable var appState = appState
-
         ZStack {
             if !isPresentingMainMenu {
                 HStack {
@@ -55,6 +54,7 @@ struct Welcome: View {
                 }
             } else {
                 MainMenu()
+                    .environment(appState)
             }
         }
         .glassBackgroundEffect()

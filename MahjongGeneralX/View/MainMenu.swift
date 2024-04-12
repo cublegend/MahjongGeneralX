@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MahjongCore
 
 struct MainMenu: View {
 
@@ -14,7 +15,7 @@ struct MainMenu: View {
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
 
     @State var isShowingSettings = false
-
+    
     var body: some View {
         VStack {
             VStack {
@@ -23,13 +24,12 @@ struct MainMenu: View {
                     if !appState.immersiveSpaceOpened {
                         Text("Ready to start a new game?")
                             .font(.title)
-
+                        
                         Button("Enter") {
                             Task {
                                 switch await openImmersiveSpace(id: UIIdentifier.gameModule) {
                                 case .opened:
                                     break
-                                    appState.appPhase.transition(to: .game)
                                 case .error:
                                     print("An error occurred when trying to open the immersive space \(UIIdentifier.gameModule)")
                                 case .userCancelled:
@@ -39,8 +39,8 @@ struct MainMenu: View {
                                 }
                                 appState.appPhase.transition(to: .game)
                             }
-                        }
-                        .disabled(!appState.canEnterImmersiveSpace)
+                        }.disabled(!appState.canEnterImmersiveSpace)
+                        
                         HStack {
                             Spacer()
                             Button {
@@ -70,7 +70,7 @@ struct MainMenu: View {
 
 }
 
-#Preview {
-    MainMenu(isShowingSettings: false)
-        .environment(AppState())
-}
+// #Preview {
+//    MainMenu(isShowingSettings: false)
+//        .environment(AppState())
+// }

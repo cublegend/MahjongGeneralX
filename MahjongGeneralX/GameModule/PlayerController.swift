@@ -268,6 +268,7 @@ class LocalPlayerController: IPlayerController {
     var canHu = false
     var canKang = false
     var decisionNeeded: Bool { canHu || canKang || canPong }
+    var possibleKangTiles: [MahjongEntity] { basePlayer.possibleKangTiles }
 
     init(basePlayer: Player, decisionProcessor: IDecisionProcessor) {
         self.basePlayer = basePlayer

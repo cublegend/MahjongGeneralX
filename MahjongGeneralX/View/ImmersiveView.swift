@@ -7,7 +7,6 @@
 
 import SwiftUI
 import RealityKit
-import MahjongCore
 
 enum AttachmentIDs: Int {
     case decisionMenu = 100
@@ -18,57 +17,21 @@ enum AttachmentIDs: Int {
 @MainActor
 struct ImmersiveView: View {
     @Environment(AppState.self) private var appState
-    @State private var placementManager = PlacementManager()
+    // FIXME: game manager should be located in the game view (could be this one) but not the entire app's view, since it is only needed in a game of mahjong
+    @State private var bootstrapper = GameBootstrapper()
     var body: some View {
-        RealityView { content in
-            content.add(placementManager.rootEntity)
-            placementManager.appState = appState
-            Task {
-                await placementManager.runARKitSession()
-            }
-
+        if bootstrapper.isReady {
+            GameImmersiveView(placementManager: bootstrapper.placementManager, gameManager: bootstrapper.gameManager)
+        } else {
+            LoadingView()
+                .task {
+                    await bootstrapper.bootstrap()
+                }
         }
-        .task {
-            await placementManager.processWorldAnchorUpdates()
-        }
-        .task {
-            await placementManager.processDeviceAnchorUpdates()
-        }
-        .task {
-            // Update plane anchors
-            await placementManager.processPlaneUpdates()
-        }
-        .task {
-            await placementManager.processHandAnchorUpdates()
-        }
-        .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { event in
-            // click on the cube to place it in the space
-            print("Clicked on something")
-            if event.entity.components[CollisionComponent.self]?.filter.group == TableEntity.previewCollisionGroup {
-                logger.info("Placing table.")
-                placementManager.userPlaceTable()
-            } else if event.entity.components[CollisionComponent.self]?.filter.group == MahjongEntity.clickableCollisionGroup {
-                print(event.entity.name)
-//                print(appState.gameState)
-//                print(appState.localPlayer!.playerState)
-//                if appState.gameState == .switchTiles {
-//                    appState.localPlayerChooseSwitchTiles(value: event.entity)
-//                }
-//                if appState.gameState == .round && appState.localPlayer!.playerState == .roundDiscard{
-//                    appState.playerChooseDiscardTiles(value: event.entity)
-//                }
-            }
-        }).onAppear {
-            print("Entering immersive space.")
-            appState.immersiveSpaceOpened(with: placementManager)
-        }
-        .onDisappear {
-            print("Leaving immersive space.")
-            appState.cleanUpAfterLeavingImmersiveSpace()
-        }
+        
     }
 }
 
-#Preview(immersionStyle: .mixed) {
-    ImmersiveView()
-}
+// #Preview(immersionStyle: .mixed) {
+//    ImmersiveView()
+// }

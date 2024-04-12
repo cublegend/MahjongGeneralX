@@ -20,7 +20,6 @@
 		CBEE805D2BC888F00060DFD9 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80572BC888F00060DFD9 /* Settings.swift */; };
 		CBEE805E2BC888F00060DFD9 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80582BC888F00060DFD9 /* Welcome.swift */; };
 		CBEE80662BC889990060DFD9 /* PlacementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE805F2BC889990060DFD9 /* PlacementManager.swift */; };
-		CBEE80672BC889990060DFD9 /* GameInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80602BC889990060DFD9 /* GameInfo.swift */; };
 		CBEE80682BC889990060DFD9 /* PlacementState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80612BC889990060DFD9 /* PlacementState.swift */; };
 		CBEE80692BC889990060DFD9 /* PlacementManager+Detection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80622BC889990060DFD9 /* PlacementManager+Detection.swift */; };
 		CBEE806A2BC889990060DFD9 /* UserDiscardTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */; };
@@ -29,6 +28,12 @@
 		CBEE80722BC88A580060DFD9 /* HandDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE806E2BC88A580060DFD9 /* HandDetection.swift */; };
 		CBEE80732BC88A580060DFD9 /* PlaneDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */; };
 		CBEE80742BC88A580060DFD9 /* WorldDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80702BC88A580060DFD9 /* WorldDetection.swift */; };
+		CBEE80762BC8AFEC0060DFD9 /* ViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80752BC8AFEC0060DFD9 /* ViewUtils.swift */; };
+		CBEE80792BC8B49C0060DFD9 /* DrawDecisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */; };
+		CBEE807B2BC8B4A60060DFD9 /* DiscardDecisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */; };
+		CBEE807D2BC8BC590060DFD9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE807C2BC8BC590060DFD9 /* LoadingView.swift */; };
+		CBEE807F2BC8C3960060DFD9 /* GameBootstrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE807E2BC8C3960060DFD9 /* GameBootstrapper.swift */; };
+		CBEE80812BC8CBBD0060DFD9 /* GameImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80802BC8CBBD0060DFD9 /* GameImmersiveView.swift */; };
 		D0D0F1DB2BC5B3E500D514AF /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = D0D0F1DA2BC5B3E500D514AF /* RealityKitContent */; };
 		D0D0F1DD2BC5B3E500D514AF /* MahjongGeneralXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */; };
 		D0D0F1E32BC5B3E600D514AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0D0F1E22BC5B3E600D514AF /* Assets.xcassets */; };
@@ -49,7 +54,6 @@
 		CBEE80572BC888F00060DFD9 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		CBEE80582BC888F00060DFD9 /* Welcome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
 		CBEE805F2BC889990060DFD9 /* PlacementManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlacementManager.swift; sourceTree = "<group>"; };
-		CBEE80602BC889990060DFD9 /* GameInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameInfo.swift; sourceTree = "<group>"; };
 		CBEE80612BC889990060DFD9 /* PlacementState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlacementState.swift; sourceTree = "<group>"; };
 		CBEE80622BC889990060DFD9 /* PlacementManager+Detection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlacementManager+Detection.swift"; sourceTree = "<group>"; };
 		CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDiscardTypeView.swift; sourceTree = "<group>"; };
@@ -58,6 +62,12 @@
 		CBEE806E2BC88A580060DFD9 /* HandDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandDetection.swift; sourceTree = "<group>"; };
 		CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneDetection.swift; sourceTree = "<group>"; };
 		CBEE80702BC88A580060DFD9 /* WorldDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorldDetection.swift; sourceTree = "<group>"; };
+		CBEE80752BC8AFEC0060DFD9 /* ViewUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewUtils.swift; sourceTree = "<group>"; };
+		CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawDecisionView.swift; sourceTree = "<group>"; };
+		CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscardDecisionView.swift; sourceTree = "<group>"; };
+		CBEE807C2BC8BC590060DFD9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		CBEE807E2BC8C3960060DFD9 /* GameBootstrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBootstrapper.swift; sourceTree = "<group>"; };
+		CBEE80802BC8CBBD0060DFD9 /* GameImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameImmersiveView.swift; sourceTree = "<group>"; };
 		D0D0F1D52BC5B3E500D514AF /* MahjongGeneralX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MahjongGeneralX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D0F1D92BC5B3E500D514AF /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MahjongGeneralXApp.swift; sourceTree = "<group>"; };
@@ -82,15 +92,13 @@
 		CBA6F73A2BC5D2F20056FA84 /* GameModule */ = {
 			isa = PBXGroup;
 			children = (
+				CBEE80772BC8B47D0060DFD9 /* GameViews */,
 				CBEE806D2BC889B10060DFD9 /* Placement */,
-				CBEE80602BC889990060DFD9 /* GameInfo.swift */,
-				CBEE80652BC889990060DFD9 /* UserDecisionView.swift */,
-				CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */,
-				CBEE80642BC889990060DFD9 /* UserGameMenu.swift */,
 				CBA6F73B2BC5D31B0056FA84 /* PlayerController.swift */,
 				CBEE80422BC622240060DFD9 /* GameManager.swift */,
 				CBEE804C2BC7A9C90060DFD9 /* GameManager+State.swift */,
 				CBEE80442BC6FD360060DFD9 /* DataStructure.swift */,
+				CBEE807E2BC8C3960060DFD9 /* GameBootstrapper.swift */,
 			);
 			path = GameModule;
 			sourceTree = "<group>";
@@ -106,8 +114,11 @@
 			isa = PBXGroup;
 			children = (
 				CBEE80542BC888F00060DFD9 /* ImmersiveView.swift */,
+				CBEE80802BC8CBBD0060DFD9 /* GameImmersiveView.swift */,
+				CBEE80752BC8AFEC0060DFD9 /* ViewUtils.swift */,
 				CBEE80552BC888F00060DFD9 /* InfoLabel.swift */,
 				CBEE80562BC888F00060DFD9 /* MainMenu.swift */,
+				CBEE807C2BC8BC590060DFD9 /* LoadingView.swift */,
 				CBEE80572BC888F00060DFD9 /* Settings.swift */,
 				CBEE80582BC888F00060DFD9 /* Welcome.swift */,
 			);
@@ -132,6 +143,18 @@
 				CBEE80702BC88A580060DFD9 /* WorldDetection.swift */,
 			);
 			path = Detection;
+			sourceTree = "<group>";
+		};
+		CBEE80772BC8B47D0060DFD9 /* GameViews */ = {
+			isa = PBXGroup;
+			children = (
+				CBEE80652BC889990060DFD9 /* UserDecisionView.swift */,
+				CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */,
+				CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */,
+				CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */,
+				CBEE80642BC889990060DFD9 /* UserGameMenu.swift */,
+			);
+			path = GameViews;
 			sourceTree = "<group>";
 		};
 		D0D0F1CC2BC5B3E500D514AF = {
@@ -287,10 +310,13 @@
 			files = (
 				CBEE80532BC888CF0060DFD9 /* AppConfig.swift in Sources */,
 				CBEE80452BC6FD360060DFD9 /* DataStructure.swift in Sources */,
+				CBEE80762BC8AFEC0060DFD9 /* ViewUtils.swift in Sources */,
 				CBEE805D2BC888F00060DFD9 /* Settings.swift in Sources */,
+				CBEE80812BC8CBBD0060DFD9 /* GameImmersiveView.swift in Sources */,
 				CBEE805A2BC888F00060DFD9 /* ImmersiveView.swift in Sources */,
 				CBEE80432BC622240060DFD9 /* GameManager.swift in Sources */,
 				CBEE805E2BC888F00060DFD9 /* Welcome.swift in Sources */,
+				CBEE807B2BC8B4A60060DFD9 /* DiscardDecisionView.swift in Sources */,
 				CBEE80522BC888CF0060DFD9 /* AppState.swift in Sources */,
 				CBEE80722BC88A580060DFD9 /* HandDetection.swift in Sources */,
 				D0D0F1DD2BC5B3E500D514AF /* MahjongGeneralXApp.swift in Sources */,
@@ -301,12 +327,14 @@
 				CBEE80742BC88A580060DFD9 /* WorldDetection.swift in Sources */,
 				CBEE805B2BC888F00060DFD9 /* InfoLabel.swift in Sources */,
 				CBEE80662BC889990060DFD9 /* PlacementManager.swift in Sources */,
+				CBEE807D2BC8BC590060DFD9 /* LoadingView.swift in Sources */,
 				CBEE806A2BC889990060DFD9 /* UserDiscardTypeView.swift in Sources */,
 				CBA6F73C2BC5D31B0056FA84 /* PlayerController.swift in Sources */,
 				CBEE80692BC889990060DFD9 /* PlacementManager+Detection.swift in Sources */,
 				CBEE804D2BC7A9C90060DFD9 /* GameManager+State.swift in Sources */,
+				CBEE807F2BC8C3960060DFD9 /* GameBootstrapper.swift in Sources */,
+				CBEE80792BC8B49C0060DFD9 /* DrawDecisionView.swift in Sources */,
 				CBEE806C2BC889990060DFD9 /* UserDecisionView.swift in Sources */,
-				CBEE80672BC889990060DFD9 /* GameInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

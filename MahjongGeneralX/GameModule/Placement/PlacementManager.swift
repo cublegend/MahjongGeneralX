@@ -18,11 +18,6 @@ public final class PlacementManager {
     public var rootEntity: Entity
 
     var appState: AppState?
-//    {
-//        didSet {
-//            appState?.gameManager = GameManager
-//        }
-//    }
 
     let worldTracking = WorldTrackingProvider()
     let planeTracking = PlaneDetectionProvider()
@@ -64,7 +59,6 @@ public final class PlacementManager {
         deviceLocation.addChild(raycastOrigin)
 
         Task {
-            await ModelLoader.loadObjects()
             await table.append(ModelLoader.getTable())
             await placementState.selectedObject = self.table[0].previewEntity
             await placementLocation.addChild(placementState.selectedObject)
@@ -91,10 +85,6 @@ public final class PlacementManager {
 
         // If table successfully placed, store table dimension and location to GameInfo, and loading mahjongs to the table
         if self.performPlaceTable(table: table) {
-            //            GameInfo.setTableDimension(boundingBox: table.boundingBox)
-            //            GameInfo.setTablePosition(pos: table.transform.translation, ori: table.transform.rotation)
-            //
-            //            self.initializeAllMahjong()
             logger.info("User successfually placed mahjong")
         }
     }

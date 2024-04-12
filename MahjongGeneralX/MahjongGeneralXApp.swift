@@ -14,7 +14,7 @@ enum UIIdentifier {
 
 @main
 @MainActor
-struct MahjongDemo3App: App {
+struct MahjongGeneralXApp: App {
 
     @State private var appState = AppState()
 
@@ -34,6 +34,7 @@ struct MahjongDemo3App: App {
             ImmersiveView()
                 .environment(appState)
         }
+        ImmersiveSpace(id: UIIdentifier.)
 //        .onChange(of: scenePhase, initial: true) {
 //            if scenePhase != .active {
 //                // Leave the immersive space when the user dismisses the app.

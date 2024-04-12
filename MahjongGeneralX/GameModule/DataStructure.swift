@@ -44,7 +44,7 @@ public enum GameState: String, Codable, Sendable, Equatable {
     func canProgress(to phase: GameState) -> Bool {
         switch self {
         case .gameWaitToStart:
-            return phase == .initialDraw
+            return [.initialDraw, .gameWaitToStart].contains(phase)
         case .initialDraw:
             return [.switchTiles, .gameWaitToStart].contains(phase)
         case .switchTiles:
