@@ -29,7 +29,6 @@ struct ImmersiveView: View {
                 await placementManager.runARKitSession()
             }
         } update: { _, attachments in
-            
             if gameManager.gameState == .round {
                 let menu = attachments.entity(for: AttachmentIDs.gameMenu)
                 menu?.position = PlacementState.attachmentPosition
@@ -37,7 +36,7 @@ struct ImmersiveView: View {
                 attachments.entity(for: AttachmentIDs.gameMenu)?.removeFromParent()
             }
             
-            if (localPlayer?.playerState == .decideDiscardSuit) ?? false {
+            if localPlayer?.playerState == .decideDiscardSuit {
                 let menu = attachments.entity(for: AttachmentIDs.discardTypeMenu)
                 menu?.position = PlacementState.attachmentPosition
             } else {
@@ -62,6 +61,12 @@ struct ImmersiveView: View {
             Attachment(id: AttachmentIDs.gameMenu) {
                 UserGameMenu()
                     .environment(gameManager)
+            }
+        }
+        .onChange(of: placementManager.tablePlaced) {
+            if placementManager.tablePlaced {
+                print("Starting game")
+                gameManager.startGame()
             }
         }
         .task {

@@ -10,20 +10,6 @@ import MahjongCore
 
 extension GameManager {
     // MARK: .waitToStart
-
-    /// This method is called once per game when entering game room
-    /// NOT once per new mahjong game inside a room
-    @MainActor
-    public func prepareToStart() {
-//        self.mahjongSet = MahjongSet()
-//        guard let mahjongSet = self.mahjongSet else { return }
-//        self.table.append(table)
-//        table.addChild(mahjongSet.rootEntity)
-        createLocalPlayer()
-        fillSeatsWithBots()
-        enterWaitToStartState()
-    }
-    
     public func enterWaitToStartState() {
         guard gameState.transition(to: .gameWaitToStart) else { return }
         initializeGameData()

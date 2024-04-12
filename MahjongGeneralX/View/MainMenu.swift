@@ -66,7 +66,6 @@ struct MainMenu: View {
                     switch await openImmersiveSpace(id: UIIdentifier.gameModule) {
                     case .opened:
                         isEnterClicked = false
-                        break
                     case .error:
                         print("An error occurred when trying to open the immersive space \(UIIdentifier.gameModule)")
                     case .userCancelled:

@@ -40,9 +40,10 @@ class GameManager: IDecisionProcessor {
         self.mahjongSet = MahjongSet()
         self.table.append(table)
         table.addChild(mahjongSet.rootEntity)
+        createLocalPlayer()
+        fillSeatsWithBots()
+        enterWaitToStartState()
     }
-    
-    // MARK: starts game
 
     // TODO: put into bot manager logic
     func fillSeatsWithBots() {
