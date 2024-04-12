@@ -27,34 +27,28 @@ struct MahjongGeneralXApp: App {
 
     var body: some Scene {
         WindowGroup(id: UIIdentifier.entryPoint) {
-            Welcome()
+            MahjongView()
                 .environment(appState)
         }
         .windowResizability(.contentSize)
         .windowStyle(.plain)
-        .onChange(of: appState.appPhase == .game) {
-            dismissWindow(id: UIIdentifier.entryPoint)
-        }
-
+        
         ImmersiveSpace(id: UIIdentifier.gameModule) {
             if ModelLoader.didFinishLoading {
                 ImmersiveView(placementManager: PlacementManager(), gameManager: GameManager(table: ModelLoader.getTable()))
                     .environment(appState)
             }
         }
-        .onChange(of: appState.appPhase == .welcome) {
-            openWindow(id: UIIdentifier.entryPoint)
+        .onChange(of: scenePhase, initial: true) {
+            if scenePhase != .active {
+                // Leave the immersive space when the user dismisses the app.
+                if appState.immersiveSpaceOpened {
+                    Task {
+                        await dismissImmersiveSpace()
+                        appState.cleanUpAfterLeavingImmersiveSpace()
+                    }
+                }
+            }
         }
-//        .onChange(of: scenePhase, initial: true) {
-//            if scenePhase != .active {
-//                // Leave the immersive space when the user dismisses the app.
-//                if appState.immersiveSpaceOpened {
-//                    Task {
-//                        await dismissImmersiveSpace()
-//                        appState.cleanUpAfterLeavingImmersiveSpace()
-//                    }
-//                }
-//            }
-//        }
     }
 }

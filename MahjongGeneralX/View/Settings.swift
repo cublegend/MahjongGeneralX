@@ -45,5 +45,4 @@ struct Settings: View {
         .environment(AppState())
         .padding(20)
         .frame(width: 400)
-        .glassBackgroundEffect()
 }

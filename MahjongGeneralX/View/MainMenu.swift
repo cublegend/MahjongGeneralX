@@ -30,7 +30,7 @@ struct MainMenu: View {
                         if !isEnterClicked {
                             Button("Enter") {
                                 isEnterClicked = true
-                            }.disabled(!appState.canEnterImmersiveSpace)
+                            }.disabled(!appState.canEnterImmersiveSpace || isShowingSettings)
                         } else {
                             LoadingView()
                         }
@@ -49,13 +49,11 @@ struct MainMenu: View {
                 }
             }
             .frame(width: 400, height: 250)
-            .glassBackgroundEffect(in: .rect(cornerRadius: 40))
 
             // Display the settings view conditionally
             if isShowingSettings {
                 Settings()
                     .padding(20)
-                    .glassBackgroundEffect(in: .rect(cornerRadius: 40))
                     .frame(width: 400)
             }
         }
@@ -82,7 +80,7 @@ struct MainMenu: View {
 
 }
 
-// #Preview {
-//    MainMenu(isShowingSettings: false)
-//        .environment(AppState())
-// }
+ #Preview {
+    MainMenu(isShowingSettings: true)
+        .environment(AppState())
+ }

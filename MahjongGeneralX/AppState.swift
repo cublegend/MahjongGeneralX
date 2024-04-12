@@ -31,8 +31,8 @@ public class AppState {
     func cleanUpAfterLeavingImmersiveSpace() {
         // Remember which placed object is attached to which persistent world anchor when leaving the immersive space.
         if let placementManager {
-//            placementManager.saveWorldAnchorsObjectsMapToDisk()
-
+            placementManager.saveWorldAnchorsObjectsMapToDisk()
+            appPhase = .welcome
             // Stop the providers. The providers that just ran in the
             // immersive space are paused now, but the session doesn’t need them anymore.
             // When the user reenters the immersive space, the app runs a new set of providers.
