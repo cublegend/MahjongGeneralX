@@ -15,6 +15,7 @@ struct MainMenu: View {
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
 
     @State var isShowingSettings = false
+    @State var isEnterClicked = false
     
     var body: some View {
         VStack {
@@ -25,21 +26,13 @@ struct MainMenu: View {
                         Text("Ready to start a new game?")
                             .font(.title)
                         
-                        Button("Enter") {
-                            Task {
-                                switch await openImmersiveSpace(id: UIIdentifier.gameModule) {
-                                case .opened:
-                                    break
-                                case .error:
-                                    print("An error occurred when trying to open the immersive space \(UIIdentifier.gameModule)")
-                                case .userCancelled:
-                                    print("The user declined opening immersive space \(UIIdentifier.gameModule)")
-                                @unknown default:
-                                    break
-                                }
-                                appState.appPhase.transition(to: .game)
-                            }
-                        }.disabled(!appState.canEnterImmersiveSpace)
+                        if !isEnterClicked {
+                            Button("Enter") {
+                                isEnterClicked = true
+                            }.disabled(!appState.canEnterImmersiveSpace)
+                        } else {
+                            LoadingView()
+                        }
                         
                         HStack {
                             Spacer()
@@ -66,6 +59,25 @@ struct MainMenu: View {
             }
         }
         .opacity(appState.immersiveSpaceOpened ? 0 : 1)
+        .onChange(of: isEnterClicked) {
+            if isEnterClicked {
+                Task {
+                    await ModelLoader.loadObjects()
+                    switch await openImmersiveSpace(id: UIIdentifier.gameModule) {
+                    case .opened:
+                        isEnterClicked = false
+                        break
+                    case .error:
+                        print("An error occurred when trying to open the immersive space \(UIIdentifier.gameModule)")
+                    case .userCancelled:
+                        print("The user declined opening immersive space \(UIIdentifier.gameModule)")
+                    @unknown default:
+                        break
+                    }
+                    appState.appPhase.transition(to: .game)
+                }
+            }
+        }
     }
 
 }

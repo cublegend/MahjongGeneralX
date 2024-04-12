@@ -32,8 +32,6 @@
 		CBEE80792BC8B49C0060DFD9 /* DrawDecisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */; };
 		CBEE807B2BC8B4A60060DFD9 /* DiscardDecisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */; };
 		CBEE807D2BC8BC590060DFD9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE807C2BC8BC590060DFD9 /* LoadingView.swift */; };
-		CBEE807F2BC8C3960060DFD9 /* GameBootstrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE807E2BC8C3960060DFD9 /* GameBootstrapper.swift */; };
-		CBEE80812BC8CBBD0060DFD9 /* GameImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80802BC8CBBD0060DFD9 /* GameImmersiveView.swift */; };
 		D0D0F1DB2BC5B3E500D514AF /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = D0D0F1DA2BC5B3E500D514AF /* RealityKitContent */; };
 		D0D0F1DD2BC5B3E500D514AF /* MahjongGeneralXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */; };
 		D0D0F1E32BC5B3E600D514AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0D0F1E22BC5B3E600D514AF /* Assets.xcassets */; };
@@ -66,8 +64,6 @@
 		CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawDecisionView.swift; sourceTree = "<group>"; };
 		CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscardDecisionView.swift; sourceTree = "<group>"; };
 		CBEE807C2BC8BC590060DFD9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
-		CBEE807E2BC8C3960060DFD9 /* GameBootstrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBootstrapper.swift; sourceTree = "<group>"; };
-		CBEE80802BC8CBBD0060DFD9 /* GameImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameImmersiveView.swift; sourceTree = "<group>"; };
 		D0D0F1D52BC5B3E500D514AF /* MahjongGeneralX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MahjongGeneralX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D0F1D92BC5B3E500D514AF /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MahjongGeneralXApp.swift; sourceTree = "<group>"; };
@@ -98,7 +94,6 @@
 				CBEE80422BC622240060DFD9 /* GameManager.swift */,
 				CBEE804C2BC7A9C90060DFD9 /* GameManager+State.swift */,
 				CBEE80442BC6FD360060DFD9 /* DataStructure.swift */,
-				CBEE807E2BC8C3960060DFD9 /* GameBootstrapper.swift */,
 			);
 			path = GameModule;
 			sourceTree = "<group>";
@@ -114,7 +109,6 @@
 			isa = PBXGroup;
 			children = (
 				CBEE80542BC888F00060DFD9 /* ImmersiveView.swift */,
-				CBEE80802BC8CBBD0060DFD9 /* GameImmersiveView.swift */,
 				CBEE80752BC8AFEC0060DFD9 /* ViewUtils.swift */,
 				CBEE80552BC888F00060DFD9 /* InfoLabel.swift */,
 				CBEE80562BC888F00060DFD9 /* MainMenu.swift */,
@@ -312,7 +306,6 @@
 				CBEE80452BC6FD360060DFD9 /* DataStructure.swift in Sources */,
 				CBEE80762BC8AFEC0060DFD9 /* ViewUtils.swift in Sources */,
 				CBEE805D2BC888F00060DFD9 /* Settings.swift in Sources */,
-				CBEE80812BC8CBBD0060DFD9 /* GameImmersiveView.swift in Sources */,
 				CBEE805A2BC888F00060DFD9 /* ImmersiveView.swift in Sources */,
 				CBEE80432BC622240060DFD9 /* GameManager.swift in Sources */,
 				CBEE805E2BC888F00060DFD9 /* Welcome.swift in Sources */,
@@ -332,7 +325,6 @@
 				CBA6F73C2BC5D31B0056FA84 /* PlayerController.swift in Sources */,
 				CBEE80692BC889990060DFD9 /* PlacementManager+Detection.swift in Sources */,
 				CBEE804D2BC7A9C90060DFD9 /* GameManager+State.swift in Sources */,
-				CBEE807F2BC8C3960060DFD9 /* GameBootstrapper.swift in Sources */,
 				CBEE80792BC8B49C0060DFD9 /* DrawDecisionView.swift in Sources */,
 				CBEE806C2BC889990060DFD9 /* UserDecisionView.swift in Sources */,
 			);

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MahjongCore
 
 enum UIIdentifier {
     static let entryPoint = "Entry point"
@@ -31,10 +32,11 @@ struct MahjongGeneralXApp: App {
         .windowStyle(.plain)
 
         ImmersiveSpace(id: UIIdentifier.gameModule) {
-            ImmersiveView()
-                .environment(appState)
+            if ModelLoader.didFinishLoading {
+                ImmersiveView(placementManager: PlacementManager(), gameManager: GameManager(table: ModelLoader.getTable()))
+                    .environment(appState)
+            }
         }
-        ImmersiveSpace(id: UIIdentifier.)
 //        .onChange(of: scenePhase, initial: true) {
 //            if scenePhase != .active {
 //                // Leave the immersive space when the user dismisses the app.

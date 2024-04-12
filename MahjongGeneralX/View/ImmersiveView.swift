@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RealityKit
+import MahjongCore
 
 enum AttachmentIDs: Int {
     case decisionMenu = 100
@@ -17,18 +18,83 @@ enum AttachmentIDs: Int {
 @MainActor
 struct ImmersiveView: View {
     @Environment(AppState.self) private var appState
-    // FIXME: game manager should be located in the game view (could be this one) but not the entire app's view, since it is only needed in a game of mahjong
-    @State private var bootstrapper = GameBootstrapper()
+    @State var placementManager: PlacementManager
+    @State var gameManager: GameManager
     var body: some View {
-        if bootstrapper.isReady {
-            GameImmersiveView(placementManager: bootstrapper.placementManager, gameManager: bootstrapper.gameManager)
-        } else {
-            LoadingView()
-                .task {
-                    await bootstrapper.bootstrap()
-                }
+        let localPlayer = gameManager.localPlayer
+        RealityView { content, _ in
+            content.add(placementManager.rootEntity)
+            placementManager.appState = appState
+            Task {
+                await placementManager.runARKitSession()
+            }
+        } update: { _, attachments in
+            
+            if gameManager.gameState == .round {
+                let menu = attachments.entity(for: AttachmentIDs.gameMenu)
+                menu?.position = PlacementState.attachmentPosition
+            } else {
+                attachments.entity(for: AttachmentIDs.gameMenu)?.removeFromParent()
+            }
+            
+            if (localPlayer?.playerState == .decideDiscardSuit) ?? false {
+                let menu = attachments.entity(for: AttachmentIDs.discardTypeMenu)
+                menu?.position = PlacementState.attachmentPosition
+            } else {
+                attachments.entity(for: AttachmentIDs.discardTypeMenu)?.removeFromParent()
+            }
+            
+            if localPlayer?.decisionNeeded ?? false {
+                let menu = attachments.entity(for: AttachmentIDs.decisionMenu)
+                menu?.position = PlacementState.attachmentPosition
+            } else {
+                attachments.entity(for: AttachmentIDs.decisionMenu)?.removeFromParent()
+            }
+        } attachments: {
+            Attachment(id: AttachmentIDs.decisionMenu) {
+                UserDecisionView()
+                    .environment(gameManager)
+            }
+            Attachment(id: AttachmentIDs.discardTypeMenu) {
+                UserDiscardTypeView()
+                    .environment(gameManager)
+            }
+            Attachment(id: AttachmentIDs.gameMenu) {
+                UserGameMenu()
+                    .environment(gameManager)
+            }
         }
-        
+        .task {
+            await placementManager.processWorldAnchorUpdates()
+        }
+        .task {
+            await placementManager.processDeviceAnchorUpdates()
+        }
+        .task {
+            // Update plane anchors
+            await placementManager.processPlaneUpdates()
+        }
+        .task {
+            await placementManager.processHandAnchorUpdates()
+        }
+        .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { event in
+            // click on the cube to place it in the space
+            print("Clicked on something")
+            if event.entity.components[CollisionComponent.self]?.filter.group == TableEntity.previewCollisionGroup {
+                logger.info("Placing table.")
+                placementManager.userPlaceTable()
+            } else if event.entity.components[CollisionComponent.self]?.filter.group == MahjongEntity.clickableCollisionGroup {
+                print(event.entity.name)
+                
+            }
+        }).onAppear {
+            print("Entering immersive space.")
+            appState.immersiveSpaceOpened(with: placementManager)
+        }
+        .onDisappear {
+            print("Leaving immersive space.")
+            appState.cleanUpAfterLeavingImmersiveSpace()
+        }
     }
 }
 
