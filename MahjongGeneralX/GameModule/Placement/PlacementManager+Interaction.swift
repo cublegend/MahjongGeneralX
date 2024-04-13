@@ -20,6 +20,7 @@ struct DragState {
         draggedObject = objectToDrag
         initialPosition = objectToDrag.position
         parentEntity = objectToDrag.parent!
+        print("parent 1: \(parentEntity.name)")
     }
 }
 
@@ -35,17 +36,11 @@ extension PlacementManager {
         guard let table = self.table else { return }
 
         if currentDrag == nil {
-            mahjong.isBeingDragged = true
-            if mahjong.parent == table {
-                currentDrag = DragState(objectToDrag: mahjong)
-            } else {
-                // assume mahjong grandpa is table
-                let tempPosition = table.convert(position: mahjong.position, from: mahjong)
-                mahjong.removeFromParent()
-                table.addChild(mahjong)
-                mahjong.position = tempPosition
-                currentDrag = DragState(objectToDrag: mahjong)
-            }
+            currentDrag = DragState(objectToDrag: mahjong)
+            let tempPosition = table.convert(position: mahjong.position, from: mahjong)
+            mahjong.removeFromParent()
+            table.addChild(mahjong)
+            mahjong.position = tempPosition
         }
         
         if let currentDrag {
@@ -63,12 +58,17 @@ extension PlacementManager {
         guard let currentDrag else { return }
         highlightEntity.components.set(OpacityComponent(opacity: 0))
         if !inDiscardPileArea(handPos: currentDrag.draggedObject.position) {
-            currentDrag.draggedObject.position = currentDrag.initialPosition
+            // 放回去
             currentDrag.parentEntity.addChild(currentDrag.draggedObject)
+            currentDrag.draggedObject.position = currentDrag.initialPosition
+            print("parent2 name: ", currentDrag.parentEntity.name)
+//            currentDrag.parentEntity.addChild(currentDrag.draggedObject)
+//            currentDrag.draggedObject.affectedByPhysics = false
         } else {
             localPlayer.processDiscardTile(mahjong)
+//            currentDrag.draggedObject.affectedByPhysics = false
         }
-        currentDrag.draggedObject.isBeingDragged = false
+//        currentDrag.draggedObject.isBeingDragged = false
         self.currentDrag = nil
     }
     
