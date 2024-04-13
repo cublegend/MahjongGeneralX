@@ -118,10 +118,7 @@ class BotController: IPlayerController {
     }
     
     func askPlayerToDecide(discarded: MahjongEntity) {
-        guard playerState.transition(to: .roundDecision) else {
-            print("\(playerID) \(playerState) Not equal roundDecision state!")
-            return
-        }
+        guard playerState.transition(to: .roundDecision) else { return }
 
         // save decision in a variable and pass to the process function
         // nothing declared here will run!
@@ -260,7 +257,21 @@ class LocalPlayerController: IPlayerController {
     let basePlayer: Player
     let mahjongSet: MahjongSet
     let decisionProcessor: IDecisionProcessor
-    var playerState: PlayerState = .playerWaitToStart
+    var playerState: PlayerState = .playerWaitToStart {
+        didSet {
+            switch playerState {
+            case .decideSwitchTiles, .roundDiscard:
+                for tile in basePlayer.closeHand {
+                    tile.isClickable = true
+                }
+            default:
+                for tile in basePlayer.closeHand {
+                    tile.isClickable = false
+                }
+            }
+        
+        }
+    }
 
     // TODO: Bloody only logic
     var switchTiles: [MahjongEntity] = []
@@ -430,6 +441,7 @@ class LocalPlayerController: IPlayerController {
     }
 
     public func processDecideType(_ type: MahjongType) {
+        print("process local player decide discard: \(type.text)")
         basePlayer.setDiscardType(type)
         decisionProcessor.submitCompletion(for: self, type: .chooseDiscard)
     }
@@ -439,6 +451,7 @@ class LocalPlayerController: IPlayerController {
         case .initDraw:
             return // will be draw
         case .decideSwitchTiles:
+            tile.isSelected.toggle()
             processSwitchTiles(tile)
         case .roundDraw:
             return // will be draw
@@ -478,6 +491,9 @@ class LocalPlayerController: IPlayerController {
         }
 
         if switchTiles.count >= switchTileNum {
+            for mahjong in switchTiles {
+                mahjong.isSelected = false
+            }
             decisionProcessor.submitCompletion(for: self, type: .switchTile)
         }
     }

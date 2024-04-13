@@ -102,27 +102,41 @@ class GameManager: IDecisionProcessor {
     /// else process pong
     func submitDecision(for player: IPlayerController, decision: PlayerDecision) {
         playerDecisions[player.playerID] = decision
-
+        print("\(player.playerID) submitted decision of type: \(decision.label.name)")
+        print("received total of: \(playerDecisions.count) decisions")
+        var nextPlayerIndex = currentPlayerIndex+1 // default next player
         // When all decisions have been submitted, process them
-        if playerDecisions.count == players.count {
+        if playerDecisions.count == players.count-1 {
             // Determine the presence of specific decisions
             let hasHu = playerDecisions.values.contains { $0.label == .hu }
             // Filter decisions based on the rules
-            let filteredDecisions: [PlayerDecision]
+            var filteredDecisions = playerDecisions.filter { $0.value.label != .pass }
             if hasHu {
                 // If only hu decisions are submitted or hu is present, keep only hu decisions
-                filteredDecisions = playerDecisions.values.filter { $0.label == .hu }
+                // next player is still +1 because hu players will be skipped automatically
+                filteredDecisions = filteredDecisions.filter { $0.value.label == .hu }
             } else {
-                // If neither hu nor pong, proceed with kang or whatever is left
-                filteredDecisions = Array(playerDecisions.values)
+                // If no hu, proceed with all
+                // no hu there could only be one decision!
+                // change nextPlayer to be the one who called pong or kang!
+                nextPlayerIndex = players.firstIndex(where: {
+                    $0.playerID == filteredDecisions.keys.first
+                }) ?? nextPlayerIndex
             }
-
-            // Execute actions for the filtered decisions
-            for decision in filteredDecisions {
-                decision.decision()
-            }
-
+            
             playerDecisions.removeAll()
+            if filteredDecisions.isEmpty {
+                // go to next turn
+                nextTurn(state: .roundDraw)
+            } else {
+                // Execute actions for the filtered decisions
+                for decision in filteredDecisions.values {
+                    decision.decision()
+                }
+                
+                currentPlayerIndex = nextPlayerIndex
+                nextTurn(state: .roundDraw)
+            }
         }
     }
 
@@ -141,15 +155,16 @@ class GameManager: IDecisionProcessor {
             }
         case .chooseDiscard:
             playerCompletions.insert(player.playerID)
+            print("Player competion count: \(playerCompletions.count)")
             if playerCompletions.count == players.count {
-                enterRoundState()
                 playerCompletions.removeAll()
+                enterRoundState()
             }
         case .switchTile:
             playerCompletions.insert(player.playerID)
             if playerCompletions.count == players.count {
-                performSwitchTilesAction()
                 playerCompletions.removeAll()
+                performSwitchTilesAction()
             }
         case .hu:
             nextTurn(state: .roundDraw)
@@ -165,7 +180,7 @@ class GameManager: IDecisionProcessor {
             if player.playerID == current.playerID { continue }
             // ask players to decide
             // all players should submit a decision using submitDecision(...)
-            current.askPlayerToDecide(discarded: mahjongSet.lastTileDiscarded!)
+            player.askPlayerToDecide(discarded: mahjongSet.lastTileDiscarded!)
         }
     }
 }
