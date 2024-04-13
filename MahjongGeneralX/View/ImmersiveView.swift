@@ -12,6 +12,7 @@ import MahjongCore
 enum AttachmentIDs: Int {
     case decisionMenu = 100
     case discardTypeMenu = 101
+    case utilsView = 102
 }
 
 @MainActor
@@ -21,14 +22,19 @@ struct ImmersiveView: View {
     @State var gameManager: GameManager = GameManager()
     var body: some View {
         let localPlayer = gameManager.localPlayer
-        RealityView { content, _ in
+        RealityView { content, attachments in
             content.add(placementManager.rootEntity)
             let table = ModelLoader.getTable()
             placementManager.onModelLoaded(table: table)
             gameManager.onModelLoaded(table: table)
             placementManager.appState = appState
+            
             Task {
                 await placementManager.runARKitSession()
+            }
+            
+            if let utilsView = attachments.entity(for: AttachmentIDs.utilsView) {
+                placementManager.userUtilsView = utilsView
             }
         } update: { _, attachments in
             if localPlayer?.playerState == .decideDiscardSuit {
@@ -52,6 +58,13 @@ struct ImmersiveView: View {
             Attachment(id: AttachmentIDs.discardTypeMenu) {
                 UserDiscardTypeView()
                     .environment(gameManager)
+            }
+            Attachment(id: AttachmentIDs.utilsView) {
+                if shouldAnchorTable {
+                    UserUtilsView(text: "Find a plane to place table. Tab to confirm.")
+                } else {
+                    UserUtilsView(text: "Tab to place the table.")
+                }
             }
         }
         .onChange(of: placementManager.tablePlaced) {

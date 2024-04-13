@@ -39,9 +39,7 @@ public final class PlacementManager {
     var mahjongPrototype = [MahjongEntity]()
 
     // User decision attachment
-    var userDecisionAttachment: ViewAttachmentEntity?
-    var userDiscardTypeAttachment: ViewAttachmentEntity?
-    var userGameMenu: ViewAttachmentEntity?
+    var userUtilsView: ViewAttachmentEntity?
 
     init() {
         let root = Entity()
@@ -64,6 +62,9 @@ public final class PlacementManager {
         self.table.append(table)
         placementState.selectedObject = self.table[0].previewEntity
         placementLocation.addChild(placementState.selectedObject)
+        
+        guard let menu = userUtilsView else { print("jinqulemei"); return }
+        rootEntity.addChild(menu)
     }
 
     @MainActor
@@ -106,6 +107,9 @@ public final class PlacementManager {
             }
 
             table.previewEntity.removeFromParent()
+            
+            guard let menu = userUtilsView else { fatalError("Utils not found") }
+            menu.removeFromParent()
 
             return true
         } else if !shouldAnchorTable {
@@ -120,6 +124,8 @@ public final class PlacementManager {
 
             table.previewEntity.removeFromParent()
 
+            guard let menu = userUtilsView else { fatalError("Utils not found") }
+            menu.removeFromParent()
             return true
         }
         return false

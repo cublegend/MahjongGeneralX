@@ -27,7 +27,7 @@
 		CBEE80722BC88A580060DFD9 /* HandDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE806E2BC88A580060DFD9 /* HandDetection.swift */; };
 		CBEE80732BC88A580060DFD9 /* PlaneDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */; };
 		CBEE80742BC88A580060DFD9 /* WorldDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80702BC88A580060DFD9 /* WorldDetection.swift */; };
-		CBEE80762BC8AFEC0060DFD9 /* ViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80752BC8AFEC0060DFD9 /* ViewUtils.swift */; };
+		CBEE80762BC8AFEC0060DFD9 /* UserUtilsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80752BC8AFEC0060DFD9 /* UserUtilsView.swift */; };
 		CBEE80792BC8B49C0060DFD9 /* DrawDecisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */; };
 		CBEE807B2BC8B4A60060DFD9 /* DiscardDecisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */; };
 		CBEE807D2BC8BC590060DFD9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEE807C2BC8BC590060DFD9 /* LoadingView.swift */; };
@@ -60,7 +60,7 @@
 		CBEE806E2BC88A580060DFD9 /* HandDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandDetection.swift; sourceTree = "<group>"; };
 		CBEE806F2BC88A580060DFD9 /* PlaneDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneDetection.swift; sourceTree = "<group>"; };
 		CBEE80702BC88A580060DFD9 /* WorldDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorldDetection.swift; sourceTree = "<group>"; };
-		CBEE80752BC8AFEC0060DFD9 /* ViewUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewUtils.swift; sourceTree = "<group>"; };
+		CBEE80752BC8AFEC0060DFD9 /* UserUtilsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUtilsView.swift; sourceTree = "<group>"; };
 		CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawDecisionView.swift; sourceTree = "<group>"; };
 		CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscardDecisionView.swift; sourceTree = "<group>"; };
 		CBEE807C2BC8BC590060DFD9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -115,7 +115,6 @@
 				CBEE80562BC888F00060DFD9 /* MainMenu.swift */,
 				D01806202BC8F65D00A977D7 /* GameMenu.swift */,
 				CBEE80542BC888F00060DFD9 /* ImmersiveView.swift */,
-				CBEE80752BC8AFEC0060DFD9 /* ViewUtils.swift */,
 				CBEE80552BC888F00060DFD9 /* InfoLabel.swift */,
 				CBEE807C2BC8BC590060DFD9 /* LoadingView.swift */,
 				CBEE80572BC888F00060DFD9 /* Settings.swift */,
@@ -150,6 +149,7 @@
 				CBEE80782BC8B49C0060DFD9 /* DrawDecisionView.swift */,
 				CBEE807A2BC8B4A60060DFD9 /* DiscardDecisionView.swift */,
 				CBEE80632BC889990060DFD9 /* UserDiscardTypeView.swift */,
+				CBEE80752BC8AFEC0060DFD9 /* UserUtilsView.swift */,
 			);
 			path = GameViews;
 			sourceTree = "<group>";
@@ -176,14 +176,14 @@
 			isa = PBXGroup;
 			children = (
 				D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */,
-				CBEE80592BC888F00060DFD9 /* View */,
-				CBEE80712BC88A580060DFD9 /* Detection */,
 				CBEE80512BC888CF0060DFD9 /* AppConfig.swift */,
 				CBEE80502BC888CF0060DFD9 /* AppState.swift */,
-				CBEE804F2BC8730D0060DFD9 /* .swiftlint.yml */,
+				CBEE80592BC888F00060DFD9 /* View */,
 				CBA6F73A2BC5D2F20056FA84 /* GameModule */,
+				CBEE80712BC88A580060DFD9 /* Detection */,
 				D0D0F1E22BC5B3E600D514AF /* Assets.xcassets */,
 				D0D0F1E72BC5B3E600D514AF /* Info.plist */,
+				CBEE804F2BC8730D0060DFD9 /* .swiftlint.yml */,
 				D0D0F1E42BC5B3E600D514AF /* Preview Content */,
 			);
 			path = MahjongGeneralX;
@@ -307,7 +307,7 @@
 			files = (
 				CBEE80532BC888CF0060DFD9 /* AppConfig.swift in Sources */,
 				CBEE80452BC6FD360060DFD9 /* DataStructure.swift in Sources */,
-				CBEE80762BC8AFEC0060DFD9 /* ViewUtils.swift in Sources */,
+				CBEE80762BC8AFEC0060DFD9 /* UserUtilsView.swift in Sources */,
 				CBEE805D2BC888F00060DFD9 /* Settings.swift in Sources */,
 				CBEE805A2BC888F00060DFD9 /* ImmersiveView.swift in Sources */,
 				CBEE80432BC622240060DFD9 /* GameManager.swift in Sources */,
