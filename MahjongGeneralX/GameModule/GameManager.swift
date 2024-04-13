@@ -118,8 +118,11 @@ class GameManager: IDecisionProcessor {
             var filteredDecisions = playerDecisions.filter { $0.value.label != .pass }
             if hasHu {
                 // If only hu decisions are submitted or hu is present, keep only hu decisions
-                // next player is still +1 because hu players will be skipped automatically
+                // current player is the first hu because hu players will be skipped automatically
                 filteredDecisions = filteredDecisions.filter { $0.value.label == .hu }
+                tempCurrentIndex = players.firstIndex(where: {
+                    $0.playerID == filteredDecisions.keys.first
+                }) ?? tempCurrentIndex
             } else {
                 // If no hu, proceed with all
                 // no hu there could only be one decision!
@@ -172,7 +175,8 @@ class GameManager: IDecisionProcessor {
                 playerCompletions.removeAll()
                 performSwitchTilesAction()
             }
-        case .hu:
+        case .hu, .zimo:
+            winnerIDs.append(player.playerID)
             nextTurn(state: .roundDraw)
         default:
             print("\(gameState) complete! But not handled")

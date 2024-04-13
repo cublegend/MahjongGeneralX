@@ -60,6 +60,7 @@ extension IPlayerController {
     fileprivate func _processDecision(_ decision: PlayerDecision) {
         // if .roundDraw, only this player will decide
         if playerState == .roundDraw {
+            print("\(basePlayer.playerID) draw decision: \(decision.label.name)")
             decision.decision()
             return
         }
@@ -128,6 +129,7 @@ class BotController: IPlayerController {
                 guard let self = self else { return }
                 self._createThenExecuteCommand(.hu, tile: discarded)
                 self.playerState.transition(to: .end)
+                self.decisionProcessor.submitCompletion(for: self, type: .hu)
             }
         } else if basePlayer.canKang(discarded) {
             decision = PlayerDecision(.kang) { [weak self] in
@@ -199,7 +201,7 @@ class BotController: IPlayerController {
                 guard let self = self else { return }
                 self._createThenExecuteCommand(.zimo)
                 self.playerState.transition(to: .end)
-                self.decisionProcessor.submitCompletion(for: self, type: .hu)
+                self.decisionProcessor.submitCompletion(for: self, type: .zimo)
             }
         } else if basePlayer.canSelfKang() {
             decision = PlayerDecision(.selfKang) { [weak self] in
@@ -386,6 +388,7 @@ class LocalPlayerController: IPlayerController {
                 guard let self = self else { return }
                 self._createThenExecuteCommand(.hu, tile: discarded)
                 self.playerState.transition(to: .end)
+                self.decisionProcessor.submitCompletion(for: self, type: .hu)
             }
         case .kang:
             decision = PlayerDecision(.kang) { [weak self] in
@@ -427,7 +430,7 @@ class LocalPlayerController: IPlayerController {
                 guard let self = self else { return }
                 self._createThenExecuteCommand(.zimo)
                 self.playerState.transition(to: .end)
-                self.decisionProcessor.submitCompletion(for: self, type: .hu)
+                self.decisionProcessor.submitCompletion(for: self, type: .zimo)
             }
         case .selfKang:
             decision = PlayerDecision(.selfKang) { [weak self] in
