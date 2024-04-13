@@ -79,4 +79,13 @@ extension GameManager {
         guard gameState.transition(to: .round) else { return }
         nextTurn(state: .roundDraw)
     }
+    
+    func endGame() {
+        guard gameState.transition(to: .gameEnd) else { return }
+        print("Game ended!")
+        // tell every player
+        for player in players {
+            player.onGameEnded()
+        }
+    }
 }

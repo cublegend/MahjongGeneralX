@@ -21,6 +21,7 @@ protocol IPlayerController {
     func askPlayerToDecide(discarded: MahjongEntity)
     func askPlayerToChooseSwitchTiles()
     func askPlayerToChooseDiscardType()
+    func onGameEnded()
 }
 
 /// Some shared logics for all player controllers are defined here
@@ -183,6 +184,10 @@ class BotController: IPlayerController {
         }
     }
     
+    func onGameEnded() {
+        playerState.transition(to: .playerWaitToStart)
+    }
+    
     // MARK: private methods
 
     /// This method should be called WITHIN .roundDraw state AFTER drawing action
@@ -273,7 +278,6 @@ class LocalPlayerController: IPlayerController {
                     tile.isClickable = false
                 }
             }
-        
         }
     }
 
@@ -348,6 +352,10 @@ class LocalPlayerController: IPlayerController {
         // switch state, then the view will be notified and starts picking
         // switch tiles.
         guard playerState.transition(to: .decideSwitchTiles) else { return }
+    }
+    
+    func onGameEnded() {
+        playerState.transition(to: .playerWaitToStart)
     }
     
     // MARK: private methods

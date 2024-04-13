@@ -26,12 +26,7 @@ struct ImmersiveView: View {
             if let utilsView = attachments.entity(for: AttachmentIDs.utilsView) {
                 placementManager.userUtilsView = utilsView
             }
-            
             content.add(placementManager.rootEntity)
-            let table = ModelLoader.getTable()
-            placementManager.onModelLoaded(table: table)
-            gameManager.onModelLoaded(table: table)
-            placementManager.appState = appState
             
             Task {
                 await placementManager.runARKitSession()
@@ -101,7 +96,7 @@ struct ImmersiveView: View {
             }
         }).onAppear {
             print("Entering immersive space.")
-            appState.immersiveSpaceOpened(with: placementManager)
+            appState.immersiveSpaceOpened(with: placementManager, and: gameManager)
         }
         .onDisappear {
             print("Leaving immersive space.")

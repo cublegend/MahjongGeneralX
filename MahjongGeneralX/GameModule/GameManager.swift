@@ -19,7 +19,7 @@ protocol IDecisionProcessor {
 class GameManager: IDecisionProcessor {
     let style: IMahjongStyle = BloodyMahjong() // TODO: this will be added in later versions
     var mahjongSet: MahjongSet
-    var table: [TableEntity] = []
+    var table: TableEntity?
     var currentTurn = 0
     var gameState: GameState = .gameWaitToStart
     
@@ -42,17 +42,32 @@ class GameManager: IDecisionProcessor {
     
     @MainActor
     public func onModelLoaded(table: TableEntity) {
-        self.table.append(table)
-        table.addChild(mahjongSet.rootEntity)
+        self.table = table
+        mahjongSet = MahjongSet()
         mahjongSet.loadMahjongsIntoMahjongSet()
+        table.addChild(mahjongSet.rootEntity)
+        
+        // initializing players
         createLocalPlayer()
         fillSeatsWithBots()
+        print("table has: \(table.children.count) children")
+        for child in table.children {
+            print(child.name)
+        }
         enterWaitToStartState()
+    }
+    
+    public func cleanUpGameData() {
+        table?.removeChild(mahjongSet.rootEntity)
+        for player in players {
+            table?.removeChild(player.basePlayer.rootEntity)
+        }
+        players.removeAll()
     }
 
     // TODO: put into bot manager logic
     func fillSeatsWithBots() {
-//        guard let mahjongSet = self.mahjongSet else { return }
+        guard let table = self.table else { return }
         let nonBotCount = players.count
         if nonBotCount < 4 {
             for idx in nonBotCount..<4 {
@@ -60,7 +75,7 @@ class GameManager: IDecisionProcessor {
                 let id = "Bot\(idx)"
                 mahjongSet.discardPile[id] = []
                 let newPlayer = Player(playerId: id, seat: seat,
-                                       table: table[0], mahjongSet: mahjongSet,
+                                       table: table, mahjongSet: mahjongSet,
                                        discardPile: mahjongSet.discardPile[id]!,
                                        style: style)
                 let newController = BotController(basePlayer: newPlayer, decisionProcessor: self)
@@ -70,13 +85,13 @@ class GameManager: IDecisionProcessor {
     }
     
     func createLocalPlayer() {
-//        guard let mahjongSet = self.mahjongSet else { return }
+        guard let table = self.table else { return }
         // FIXME: create local player here for now
         let seat = getPlayerSeat(withIndex: players.count)
         let id = "LocalPlayerXiong"
         mahjongSet.discardPile[id] = []
         let newPlayer = Player(playerId: id, seat: seat,
-                               table: table[0], mahjongSet: mahjongSet,
+                               table: table, mahjongSet: mahjongSet,
                                discardPile: mahjongSet.discardPile[id]!,
                                style: style)
         let newController = LocalPlayerController(basePlayer: newPlayer, decisionProcessor: self)
@@ -144,11 +159,22 @@ class GameManager: IDecisionProcessor {
                 for decision in filteredDecisions.values {
                     decision.decision()
                 }
+                // if people hu, needs to manually handle next turn here
+                // normally we handle nextTurn in submitCompletion.
+                // However, if multiple player called hu at the same time,
+                // multiple .hu completion will be submitted and therefore
+                // multiple nextTurn will be called back to back causing unwanted
+                // behavior.
+                // MARK: solution: don't call nextTurn in submitCompletion .hu and call it here!!
+                if hasHu {
+                    nextTurn(state: .roundDraw)
+                }
             }
         }
     }
 
     /// used to receive player completion notices
+    /// also handles player hu notices
     func submitCompletion(for player: IPlayerController, type: PlayerCommand) {
         switch type {
         case .discard:
@@ -175,9 +201,20 @@ class GameManager: IDecisionProcessor {
                 playerCompletions.removeAll()
                 performSwitchTilesAction()
             }
-        case .hu, .zimo:
+        case .zimo:
             winnerIDs.append(player.playerID)
+            if winnerIDs.count == players.count-1 {
+                endGame()
+                return
+            }
+            // MARK: case .hu nextTurn() is handled in submitDecision!
             nextTurn(state: .roundDraw)
+        case .hu:
+            winnerIDs.append(player.playerID)
+            if winnerIDs.count == players.count-1 {
+                endGame()
+                return
+            }
         default:
             print("\(gameState) complete! But not handled")
             return
