@@ -17,8 +17,15 @@ import MahjongCore
 public final class PlacementManager {
     // MARK: - Placement
     public var rootEntity: Entity
+    let highlightEntity = ModelEntity(
+        mesh: .generatePlane(width: TableEntity.TABLE_WIDTH * 2 / 3, depth: TableEntity.TABLE_WIDTH * 2 / 3),
+        materials: [UnlitMaterial(color: .cyan)],
+        collisionShape: .generateSphere(radius: 0.005),
+        mass: 0.0
+    )
 
     var appState: AppState?
+    var currentDrag: DragState?
 
     let worldTracking = WorldTrackingProvider()
     let planeTracking = PlaneDetectionProvider()
@@ -58,8 +65,10 @@ public final class PlacementManager {
     }
     
     public func onModelLoaded(table: TableEntity) {
+        highlightEntity.components.set(OpacityComponent(opacity: 0))
         self.table = table
         placementState.selectedObject = table.previewEntity
+        base-development
         placementLocation.addChild(placementState.selectedObject)
         
         guard let menu = userUtilsView else { return }
@@ -92,6 +101,9 @@ public final class PlacementManager {
         if self.performPlaceTable(table: table) {
             logger.info("User successfually placed mahjong")
             tablePlaced = true
+            
+            highlightEntity.position = SIMD3<Float>(0, TableEntity.TABLE_HEIGHT, 0)
+            self.table[0].addChild(highlightEntity)
         }
     }
 

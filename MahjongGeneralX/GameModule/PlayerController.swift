@@ -488,7 +488,7 @@ class LocalPlayerController: IPlayerController {
         }
     }
 
-    private func processDiscardTile(_ mahjong: MahjongEntity) {
+    func processDiscardTile(_ mahjong: MahjongEntity) {
         if basePlayer.canDiscardTile(mahjong: mahjong) {
             _createThenExecuteCommand(.discard, tile: mahjong)
             decisionProcessor.submitCompletion(for: self, type: .discard)
