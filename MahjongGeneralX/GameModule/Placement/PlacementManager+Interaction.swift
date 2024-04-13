@@ -31,23 +31,25 @@ extension PlacementManager {
             print("A new drag started but the previous one never ended - ending that one now.")
             cannotDrag()
         }
+        
+        guard let table = self.table else { return }
 
         if currentDrag == nil {
             mahjong.isBeingDragged = true
-            if mahjong.parent == table[0] {
+            if mahjong.parent == table {
                 currentDrag = DragState(objectToDrag: mahjong)
             } else {
                 // assume mahjong grandpa is table
-                let tempPosition = table[0].convert(position: mahjong.position, from: mahjong)
+                let tempPosition = table.convert(position: mahjong.position, from: mahjong)
                 mahjong.removeFromParent()
-                table[0].addChild(mahjong)
+                table.addChild(mahjong)
                 mahjong.position = tempPosition
                 currentDrag = DragState(objectToDrag: mahjong)
             }
         }
         
         if let currentDrag {
-            currentDrag.draggedObject.position = currentDrag.initialPosition + value.convert(value.translation3D, from: .local, to: table[0])
+            currentDrag.draggedObject.position = currentDrag.initialPosition + value.convert(value.translation3D, from: .local, to: table)
             if inDiscardPileArea(handPos: currentDrag.draggedObject.position) {
                 highlightEntity.components.set(OpacityComponent(opacity: 1))
             } else {
@@ -79,27 +81,21 @@ extension PlacementManager {
     
     func inDiscardPileArea(handPos: SIMD3<Float>) -> Bool {
         if handPos.x > +TableEntity.TABLE_WIDTH/3 {
-            print("false1")
             return false
         }
         if handPos.x < -TableEntity.TABLE_WIDTH/3 {
-            print("false2")
             return false
         }
         if handPos.z > +TableEntity.TABLE_LENGTH/3 {
-            print("false3")
             return false
         }
         if handPos.z <  -TableEntity.TABLE_LENGTH/3 {
-            print("false4")
             return false
         }
         if handPos.y >  +TableEntity.TABLE_LENGTH/2 {
-            print("false5")
             return false
         }
         if handPos.y < +TableEntity.TABLE_HEIGHT {
-            print("false6")
             return false
         }
         return true

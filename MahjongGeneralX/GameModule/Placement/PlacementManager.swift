@@ -68,7 +68,6 @@ public final class PlacementManager {
         highlightEntity.components.set(OpacityComponent(opacity: 0))
         self.table = table
         placementState.selectedObject = table.previewEntity
-        base-development
         placementLocation.addChild(placementState.selectedObject)
         
         guard let menu = userUtilsView else { return }
@@ -103,7 +102,7 @@ public final class PlacementManager {
             tablePlaced = true
             
             highlightEntity.position = SIMD3<Float>(0, TableEntity.TABLE_HEIGHT, 0)
-            self.table[0].addChild(highlightEntity)
+            table.addChild(highlightEntity)
         }
     }
 
