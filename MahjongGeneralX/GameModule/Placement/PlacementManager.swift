@@ -19,6 +19,7 @@ public final class PlacementManager {
     public var rootEntity: Entity
 
     var appState: AppState?
+    var currentDrag: DragState? = nil
 
     let worldTracking = WorldTrackingProvider()
     let planeTracking = PlaneDetectionProvider()
@@ -60,6 +61,13 @@ public final class PlacementManager {
     
     public func onModelLoaded(table: TableEntity) {
         self.table.append(table)
+        
+        // Find the area player can discard tile
+        PlacementState.discardTileArea = BoundingBox(min: SIMD3<Float>(0 - TableEntity.TABLE_WIDTH / 3,
+                                                        TableEntity.TABLE_HEIGHT, 0 - TableEntity.TABLE_WIDTH / 3),
+                                      max: SIMD3<Float>(TableEntity.TABLE_WIDTH / 3, TableEntity.TABLE_WIDTH / 2,
+                                                        TableEntity.TABLE_WIDTH / 3))
+        
         placementState.selectedObject = self.table[0].previewEntity
         placementLocation.addChild(placementState.selectedObject)
         

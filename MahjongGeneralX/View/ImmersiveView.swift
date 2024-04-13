@@ -99,7 +99,18 @@ struct ImmersiveView: View {
                     localPlayer?.onClickedMahjong(mahjong)
                 }
             }
-        }).onAppear {
+        })
+        .gesture(DragGesture()
+        .targetedToAnyEntity()
+        .onChanged { value in
+            if let mahjong = value.entity as? MahjongEntity {
+                placementManager.updataDragDiscard(mahjong: mahjong, value: value)
+            }
+        }
+        .onEnded { value in
+            placementManager.endDrag()
+        })
+        .onAppear {
             print("Entering immersive space.")
             appState.immersiveSpaceOpened(with: placementManager)
         }

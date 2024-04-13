@@ -18,7 +18,11 @@ class PlacementState {
     var planeToProjectOnFound = false
     var deviceAnchorPresent = false
     var planeAnchorsPresent = false
+    
+    var userDraggedAnObject = false
 
+    static var discardTileArea = BoundingBox()
+    
     static var tableX: Float = 0.0
     static var tableY: Float = 0.0
     static var tableZ: Float = 0.0
