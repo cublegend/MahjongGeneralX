@@ -90,9 +90,14 @@ class GameManager: IDecisionProcessor {
     /// when the player completes their turn action
     /// they should send back a completion notice using submitCompletion
     func nextTurn(state: PlayerState) {
-        currentTurn += 1
         currentPlayerIndex = (currentPlayerIndex + 1) % players.count
-        players[currentPlayerIndex].takeTurn(state: state)
+        // ignore player if hu
+        if players[currentPlayerIndex].playerState == .end {
+            nextTurn(state: state)
+        } else {
+            currentTurn += 1
+            players[currentPlayerIndex].takeTurn(state: state)
+        }
     }
 
     /// Used for players to submit their decision
@@ -104,11 +109,11 @@ class GameManager: IDecisionProcessor {
         playerDecisions[player.playerID] = decision
         print("\(player.playerID) submitted decision of type: \(decision.label.name)")
         print("received total of: \(playerDecisions.count) decisions")
-        var nextPlayerIndex = currentPlayerIndex+1 // default next player
+        var tempCurrentIndex = currentPlayerIndex // default current player
         // When all decisions have been submitted, process them
-        if playerDecisions.count == players.count-1 {
+        if playerDecisions.count == players.count-1-winnerIDs.count {
             // Determine the presence of specific decisions
-            let hasHu = playerDecisions.values.contains { $0.label == .hu }
+            let hasHu = playerDecisions.values.contains { [.hu, .zimo].contains($0.label) }
             // Filter decisions based on the rules
             var filteredDecisions = playerDecisions.filter { $0.value.label != .pass }
             if hasHu {
@@ -119,12 +124,15 @@ class GameManager: IDecisionProcessor {
                 // If no hu, proceed with all
                 // no hu there could only be one decision!
                 // change nextPlayer to be the one who called pong or kang!
-                nextPlayerIndex = players.firstIndex(where: {
+                tempCurrentIndex = players.firstIndex(where: {
                     $0.playerID == filteredDecisions.keys.first
-                }) ?? nextPlayerIndex
+                }) ?? tempCurrentIndex
             }
             
             playerDecisions.removeAll()
+            currentPlayerIndex = tempCurrentIndex
+            print("current player is: \(players[currentPlayerIndex].playerID)")
+            
             if filteredDecisions.isEmpty {
                 // go to next turn
                 nextTurn(state: .roundDraw)
@@ -133,9 +141,6 @@ class GameManager: IDecisionProcessor {
                 for decision in filteredDecisions.values {
                     decision.decision()
                 }
-                
-                currentPlayerIndex = nextPlayerIndex
-                nextTurn(state: .roundDraw)
             }
         }
     }
@@ -144,6 +149,7 @@ class GameManager: IDecisionProcessor {
     func submitCompletion(for player: IPlayerController, type: PlayerCommand) {
         switch type {
         case .discard:
+            print("\(player.playerID) discarded: \(mahjongSet.lastTileDiscarded!.name)")
             otherPlayerDecides(current: player)
         case .draw: // this should only be called in init draw
             // sanity check
@@ -178,6 +184,7 @@ class GameManager: IDecisionProcessor {
 //        guard let mahjongSet = self.mahjongSet else { return }
         for player in players {
             if player.playerID == current.playerID { continue }
+            if player.playerState == .end { continue }
             // ask players to decide
             // all players should submit a decision using submitDecision(...)
             player.askPlayerToDecide(discarded: mahjongSet.lastTileDiscarded!)

@@ -64,7 +64,7 @@ public final class PlacementManager {
         placementLocation.addChild(placementState.selectedObject)
         
         guard let menu = userUtilsView else { return }
-        menu.position = SIMD3<Float>(0, TableEntity.TABLE_HEIGHT, 0)
+        menu.position = SIMD3<Float>(0, 2 * TableEntity.TABLE_HEIGHT, 0)
         placementLocation.addChild(menu)
     }
 

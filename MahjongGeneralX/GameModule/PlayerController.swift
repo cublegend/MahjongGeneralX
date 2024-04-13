@@ -195,13 +195,14 @@ class BotController: IPlayerController {
         // nothing declared here will run!
         let decision: PlayerDecision
         if basePlayer.canZimo() {
-            decision = PlayerDecision(.hu) { [weak self] in
+            decision = PlayerDecision(.zimo) { [weak self] in
                 guard let self = self else { return }
                 self._createThenExecuteCommand(.zimo)
                 self.playerState.transition(to: .end)
+                self.decisionProcessor.submitCompletion(for: self, type: .hu)
             }
         } else if basePlayer.canSelfKang() {
-            decision = PlayerDecision(.kang) { [weak self] in
+            decision = PlayerDecision(.selfKang) { [weak self] in
                 guard let self = self else { return }
                 guard let tile = self.mahjongSet.drawLastTile() else {
                     print("Game ended")
@@ -252,6 +253,7 @@ class BotController: IPlayerController {
     }
 }
 
+@Observable
 class LocalPlayerController: IPlayerController {
     let playerID: String
     let basePlayer: Player
@@ -324,14 +326,14 @@ class LocalPlayerController: IPlayerController {
 
     func askPlayerToDecide(discarded: MahjongEntity) {
         guard playerState.transition(to: .roundDecision) else { return }
-
-        resetFlags()
+        
         canHu = basePlayer.canHu(discarded)
         canPong = basePlayer.canPong(discarded)
         canKang = basePlayer.canKang(discarded)
 
         if !decisionNeeded {
             // pass, but still needs to submit!
+            print("local player no decision")
             _processDecision(PlayerDecision(.pass) {})
         }
     }
@@ -356,6 +358,7 @@ class LocalPlayerController: IPlayerController {
         canKang = basePlayer.canSelfKang()
 
         if !decisionNeeded {
+            print("\(playerID) no decision needed")
             _askPlayerToDiscardTile()
         }
     }
@@ -363,6 +366,7 @@ class LocalPlayerController: IPlayerController {
     private func _askPlayerToDiscardTile() {
         // signal the view for a discard tile
         guard playerState.transition(to: .roundDiscard) else { return }
+        print("\(playerID) wait to discard!")
     }
     
     private func resetFlags() {
@@ -391,8 +395,10 @@ class LocalPlayerController: IPlayerController {
                     print("Game ended")
                     return
                 }
+                print("\(playerID) kanged!")
                 self.playerState.transition(to: .roundDraw)
                 self._createThenExecuteCommand(.draw, tile: tile)
+                print("\(playerID) draw last tile!")
                 self._checkPlayerDrawDecision()
             }
         case .pong:
@@ -406,6 +412,8 @@ class LocalPlayerController: IPlayerController {
         default:
             return
         }
+        
+        resetFlags()
         _processDecision(decision)
     }
 
@@ -419,6 +427,7 @@ class LocalPlayerController: IPlayerController {
                 guard let self = self else { return }
                 self._createThenExecuteCommand(.zimo)
                 self.playerState.transition(to: .end)
+                self.decisionProcessor.submitCompletion(for: self, type: .hu)
             }
         case .selfKang:
             decision = PlayerDecision(.selfKang) { [weak self] in
@@ -437,6 +446,8 @@ class LocalPlayerController: IPlayerController {
         default:
             return
         }
+        
+        resetFlags()
         _processDecision(decision)
     }
 
@@ -466,6 +477,8 @@ class LocalPlayerController: IPlayerController {
         if basePlayer.canDiscardTile(mahjong: mahjong) {
             _createThenExecuteCommand(.discard, tile: mahjong)
             decisionProcessor.submitCompletion(for: self, type: .discard)
+        } else {
+            print("can't discard this tile!")
         }
     }
 
