@@ -106,14 +106,14 @@ extension PlacementManager {
     }
 
     @MainActor
-    func run(function: () async -> Void, withFrequency hz: UInt64) async {
+    func run(function: () async -> Void, withFrequency hertz: UInt64) async {
         while true {
             if Task.isCancelled {
                 return
             }
 
             // Sleep for 1 s / hz before calling the function.
-            let nanoSecondsToSleep: UInt64 = NSEC_PER_SEC / hz
+            let nanoSecondsToSleep: UInt64 = NSEC_PER_SEC / hertz
             do {
                 try await Task.sleep(nanoseconds: nanoSecondsToSleep)
             } catch {

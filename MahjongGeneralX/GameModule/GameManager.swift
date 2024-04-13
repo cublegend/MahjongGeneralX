@@ -76,7 +76,6 @@ class GameManager: IDecisionProcessor {
                 mahjongSet.discardPile[id] = []
                 let newPlayer = Player(playerId: id, seat: seat,
                                        table: table, mahjongSet: mahjongSet,
-                                       discardPile: mahjongSet.discardPile[id]!,
                                        style: style)
                 let newController = BotController(basePlayer: newPlayer, decisionProcessor: self)
                 players.append(newController)
@@ -92,7 +91,6 @@ class GameManager: IDecisionProcessor {
         mahjongSet.discardPile[id] = []
         let newPlayer = Player(playerId: id, seat: seat,
                                table: table, mahjongSet: mahjongSet,
-                               discardPile: mahjongSet.discardPile[id]!,
                                style: style)
         let newController = LocalPlayerController(basePlayer: newPlayer, decisionProcessor: self)
         players.append(newController)

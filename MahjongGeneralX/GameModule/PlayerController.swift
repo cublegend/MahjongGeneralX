@@ -443,7 +443,7 @@ class LocalPlayerController: IPlayerController {
         case .selfKang:
             decision = PlayerDecision(.selfKang) { [weak self] in
                 guard let self = self else { return }
-                self._createThenExecuteCommand(.kang, tile: tile)
+                self._createThenExecuteCommand(.selfKang, tile: tile)
                 guard let drawTile = self.mahjongSet.drawLastTile() else {
                     print("Game ended")
                     return
@@ -453,7 +453,11 @@ class LocalPlayerController: IPlayerController {
                 self._checkPlayerDrawDecision()
             }
         case .pass:
-            decision =  PlayerDecision(.pass) {}
+            decision =  PlayerDecision(.pass) { [weak self] in
+                guard let self = self else { return }
+                // if nothing to do discard
+                self._askPlayerToDiscardTile()
+            }
         default:
             return
         }
