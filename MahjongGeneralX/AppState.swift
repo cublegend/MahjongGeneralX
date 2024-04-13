@@ -45,9 +45,11 @@ public class AppState {
             // When the user reenters the immersive space, the app runs a new set of providers.
             arkitSession.stop()
         }
-        appPhase = .welcome
         placementManager?.cleanUpData()
         gameManager?.cleanUpGameData()
+        placementManager = nil
+        gameManager = nil
+        appPhase = .mainMenu
     }
 
     // MARK: - ARKit authorization
