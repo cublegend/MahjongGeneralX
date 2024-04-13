@@ -102,7 +102,7 @@ public enum PlayerState: String, Codable, Sendable, Equatable {
         case .roundDiscard:
             return [.roundDecision, .playerWaitToStart].contains(phase)
         case .roundDecision:
-            return [.roundDraw, .roundDiscard, .end, .playerWaitToStart].contains(phase)
+            return [.roundDraw, .roundDiscard, .roundDecision, .end, .playerWaitToStart].contains(phase)
         case .end:
             return [.end, .playerWaitToStart].contains(phase)
         }
@@ -112,7 +112,7 @@ public enum PlayerState: String, Codable, Sendable, Equatable {
     @discardableResult
     mutating public func transition(to newPhase: PlayerState) -> Bool {
         guard canProgress(to: newPhase) else {
-            print("Requested transition to \(newPhase.rawValue), but that's not a valid transition.")
+            print("Requested transition to \(newPhase.rawValue) from \(self.rawValue), but that's not a valid transition.")
             return false
         }
         self = newPhase

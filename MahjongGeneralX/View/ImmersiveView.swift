@@ -37,9 +37,10 @@ struct ImmersiveView: View {
                 placementManager.userUtilsView = utilsView
             }
         } update: { _, attachments in
-            if localPlayer?.playerState == .decideDiscardSuit {
+            if gameManager.gameState == .decideDiscard {
                 let menu = attachments.entity(for: AttachmentIDs.discardTypeMenu)
                 menu?.position = PlacementState.attachmentPosition
+                localPlayer?.basePlayer.rootEntity.addChild(menu!)
             } else {
                 attachments.entity(for: AttachmentIDs.discardTypeMenu)?.removeFromParent()
             }
@@ -47,6 +48,7 @@ struct ImmersiveView: View {
             if localPlayer?.decisionNeeded ?? false {
                 let menu = attachments.entity(for: AttachmentIDs.decisionMenu)
                 menu?.position = PlacementState.attachmentPosition
+                localPlayer?.basePlayer.rootEntity.addChild(menu!)
             } else {
                 attachments.entity(for: AttachmentIDs.decisionMenu)?.removeFromParent()
             }
@@ -93,8 +95,9 @@ struct ImmersiveView: View {
                 logger.info("Placing table.")
                 placementManager.userPlaceTable()
             } else if event.entity.components[CollisionComponent.self]?.filter.group == MahjongEntity.clickableCollisionGroup {
-                print(event.entity.name)
-                
+                if let mahjong = event.entity as? MahjongEntity {
+                    localPlayer?.onClickedMahjong(mahjong)
+                }
             }
         }).onAppear {
             print("Entering immersive space.")
@@ -102,7 +105,6 @@ struct ImmersiveView: View {
         }
         .onDisappear {
             print("Leaving immersive space.")
-            print(placementManager.rootEntity)
             appState.cleanUpAfterLeavingImmersiveSpace()
         }
     }
