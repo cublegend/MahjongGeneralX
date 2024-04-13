@@ -482,18 +482,21 @@ class LocalPlayerController: IPlayerController {
         case .roundDraw:
             return // will be draw
         case .roundDiscard:
-            processDiscardTile(tile)
+            tryProcessDiscardTile(tile)
         default:
             return
         }
     }
 
-    private func processDiscardTile(_ mahjong: MahjongEntity) {
+    @discardableResult
+    func tryProcessDiscardTile(_ mahjong: MahjongEntity) -> Bool {
         if basePlayer.canDiscardTile(mahjong: mahjong) {
             _createThenExecuteCommand(.discard, tile: mahjong)
             decisionProcessor.submitCompletion(for: self, type: .discard)
+            return true
         } else {
             print("can't discard this tile!")
+            return false
         }
     }
 

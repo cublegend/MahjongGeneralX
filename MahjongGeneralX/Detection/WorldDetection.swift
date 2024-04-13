@@ -38,11 +38,6 @@ final class WorldDetection {
         self.rootEntity = rootEntity
     }
 
-    @MainActor
-    func getPos(object: PlacedObject) -> WorldAnchor? {
-        return tableAnchor[object.fileName] ?? nil
-    }
-
     func deletePersistentObjectsFile() {
         let fileManager = FileManager.default
         let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -80,7 +75,23 @@ final class WorldDetection {
             print("Failed to restore the mapping from world anchors to persisted objects.")
         }
     }
+    
+    @MainActor
+    func placedObject(for entity: Entity) -> PlacedObject? {
+        return anchoredObjects.first(where: { $0.value === entity })?.value
+    }
 
+    @MainActor
+    func object(for entity: Entity) -> PlacedObject? {
+        if let placedObject = placedObject(for: entity) {
+            return placedObject
+        }
+        if let anchoringObject = objectsBeingAnchored.first(where: { $0.value === entity })?.value {
+            return anchoringObject
+        }
+        return nil
+    }
+    
     /// Serialize the mapping from world anchors to placed objects to a JSON file in the documents directory.
     func saveWorldAnchorsObjectsMapToDisk() {
         var worldAnchorsToFileNames: [UUID: String] = [:]
@@ -211,9 +222,6 @@ final class WorldDetection {
     func attachObjectToWorldAnchor(_ object: PlacedObject) async {
         let anchor = WorldAnchor(originFromAnchorTransform: object.transformMatrix(relativeTo: nil))
         objectsBeingAnchored[anchor.id] = object
-        if object.fileName == "MahjongTable.usdz" {
-            tableAnchor[object.fileName] = anchor
-        }
 
         do {
             try await worldTracking.addAnchor(anchor)
