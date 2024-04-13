@@ -100,15 +100,15 @@ struct ImmersiveView: View {
                 }
             }
         })
-        .gesture(DragGesture()
-        .targetedToAnyEntity()
-        .onChanged { value in
+        .gesture(DragGesture().targetedToAnyEntity().onChanged { value in
             if let mahjong = value.entity as? MahjongEntity {
                 placementManager.updataDragDiscard(mahjong: mahjong, value: value)
             }
         }
         .onEnded { value in
-            placementManager.endDrag()
+            if let mahjong = value.entity as? MahjongEntity {
+                placementManager.endDrag(mahjong: mahjong, localPlayer: localPlayer!)
+            }
         })
         .onAppear {
             print("Entering immersive space.")

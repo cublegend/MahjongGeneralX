@@ -17,9 +17,15 @@ import MahjongCore
 public final class PlacementManager {
     // MARK: - Placement
     public var rootEntity: Entity
+    let highlightEntity = ModelEntity(
+        mesh: .generatePlane(width: TableEntity.TABLE_WIDTH * 2 / 3, depth: TableEntity.TABLE_WIDTH * 2 / 3),
+        materials: [UnlitMaterial(color: .cyan)],
+        collisionShape: .generateSphere(radius: 0.005),
+        mass: 0.0
+    )
 
     var appState: AppState?
-    var currentDrag: DragState? = nil
+    var currentDrag: DragState?
 
     let worldTracking = WorldTrackingProvider()
     let planeTracking = PlaneDetectionProvider()
@@ -62,12 +68,8 @@ public final class PlacementManager {
     public func onModelLoaded(table: TableEntity) {
         self.table.append(table)
         
-        // Find the area player can discard tile
-        PlacementState.discardTileArea = BoundingBox(min: SIMD3<Float>(0 - TableEntity.TABLE_WIDTH / 3,
-                                                        TableEntity.TABLE_HEIGHT, 0 - TableEntity.TABLE_WIDTH / 3),
-                                      max: SIMD3<Float>(TableEntity.TABLE_WIDTH / 3, TableEntity.TABLE_WIDTH / 2,
-                                                        TableEntity.TABLE_WIDTH / 3))
-        
+        highlightEntity.components.set(OpacityComponent(opacity: 0))
+            
         placementState.selectedObject = self.table[0].previewEntity
         placementLocation.addChild(placementState.selectedObject)
         
@@ -96,6 +98,9 @@ public final class PlacementManager {
         if self.performPlaceTable(table: self.table[0]) {
             logger.info("User successfually placed mahjong")
             tablePlaced = true
+            
+            highlightEntity.position = SIMD3<Float>(0, TableEntity.TABLE_HEIGHT, 0)
+            self.table[0].addChild(highlightEntity)
         }
     }
 

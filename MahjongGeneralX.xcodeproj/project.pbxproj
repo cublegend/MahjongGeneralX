@@ -34,7 +34,6 @@
 		D018061F2BC8F5A600A977D7 /* MahjongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018061E2BC8F5A600A977D7 /* MahjongView.swift */; };
 		D01806212BC8F65D00A977D7 /* GameMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01806202BC8F65D00A977D7 /* GameMenu.swift */; };
 		D059ED202BCA0EED00048A90 /* PlacementManager+Interaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D059ED1F2BCA0EED00048A90 /* PlacementManager+Interaction.swift */; };
-		D059ED222BCA154F00048A90 /* PlaneProjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D059ED212BCA154F00048A90 /* PlaneProjector.swift */; };
 		D0D0F1DB2BC5B3E500D514AF /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = D0D0F1DA2BC5B3E500D514AF /* RealityKitContent */; };
 		D0D0F1DD2BC5B3E500D514AF /* MahjongGeneralXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */; };
 		D0D0F1E32BC5B3E600D514AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0D0F1E22BC5B3E600D514AF /* Assets.xcassets */; };
@@ -69,7 +68,6 @@
 		D018061E2BC8F5A600A977D7 /* MahjongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MahjongView.swift; sourceTree = "<group>"; };
 		D01806202BC8F65D00A977D7 /* GameMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMenu.swift; sourceTree = "<group>"; };
 		D059ED1F2BCA0EED00048A90 /* PlacementManager+Interaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlacementManager+Interaction.swift"; sourceTree = "<group>"; };
-		D059ED212BCA154F00048A90 /* PlaneProjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaneProjector.swift; sourceTree = "<group>"; };
 		D0D0F1D52BC5B3E500D514AF /* MahjongGeneralX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MahjongGeneralX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D0F1D92BC5B3E500D514AF /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		D0D0F1DC2BC5B3E500D514AF /* MahjongGeneralXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MahjongGeneralXApp.swift; sourceTree = "<group>"; };
@@ -133,7 +131,6 @@
 				CBEE80622BC889990060DFD9 /* PlacementManager+Detection.swift */,
 				D059ED1F2BCA0EED00048A90 /* PlacementManager+Interaction.swift */,
 				CBEE80612BC889990060DFD9 /* PlacementState.swift */,
-				D059ED212BCA154F00048A90 /* PlaneProjector.swift */,
 			);
 			path = Placement;
 			sourceTree = "<group>";
@@ -330,7 +327,6 @@
 				CBEE80742BC88A580060DFD9 /* WorldDetection.swift in Sources */,
 				CBEE805B2BC888F00060DFD9 /* InfoLabel.swift in Sources */,
 				CBEE80662BC889990060DFD9 /* PlacementManager.swift in Sources */,
-				D059ED222BCA154F00048A90 /* PlaneProjector.swift in Sources */,
 				CBEE807D2BC8BC590060DFD9 /* LoadingView.swift in Sources */,
 				CBEE806A2BC889990060DFD9 /* UserDiscardTypeView.swift in Sources */,
 				CBA6F73C2BC5D31B0056FA84 /* PlayerController.swift in Sources */,
