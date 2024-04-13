@@ -100,7 +100,9 @@ public enum PlayerState: String, Codable, Sendable, Equatable {
         case .roundDraw:
             return [.roundDiscard, .roundDraw, .end, .playerWaitToStart].contains(phase)
         case .roundDiscard:
-            return [.roundDecision, .playerWaitToStart].contains(phase)
+            // this to .roundDraw is possible when the player dian pao the previous player
+            // and then the player hu, so the next player is the player themselves
+            return [.roundDecision, .roundDraw, .playerWaitToStart].contains(phase)
         case .roundDecision:
             return [.roundDraw, .roundDiscard, .roundDecision, .end, .playerWaitToStart].contains(phase)
         case .end:

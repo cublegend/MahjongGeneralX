@@ -42,8 +42,7 @@ public final class PlacementManager {
     let deviceLocation: Entity
     let raycastOrigin: Entity
 
-    var table: [TableEntity] = []
-    var mahjongPrototype = [MahjongEntity]()
+    var table: TableEntity?
 
     // User decision attachment
     var userUtilsView: ViewAttachmentEntity?
@@ -66,16 +65,20 @@ public final class PlacementManager {
     }
     
     public func onModelLoaded(table: TableEntity) {
-        self.table.append(table)
-        
         highlightEntity.components.set(OpacityComponent(opacity: 0))
-            
-        placementState.selectedObject = self.table[0].previewEntity
+        self.table = table
+        placementState.selectedObject = table.previewEntity
+        base-development
         placementLocation.addChild(placementState.selectedObject)
         
         guard let menu = userUtilsView else { return }
-        menu.position = SIMD3<Float>(0, TableEntity.TABLE_HEIGHT, 0)
+        menu.position = SIMD3<Float>(0, 2 * TableEntity.TABLE_HEIGHT, 0)
         placementLocation.addChild(menu)
+    }
+    
+    public func cleanUpData() {
+        tablePlaced = false
+        
     }
 
     @MainActor
@@ -93,9 +96,9 @@ public final class PlacementManager {
     /// Called when user tapped a place to add the table into the world.
     @MainActor func userPlaceTable() {
         // Tap to add table in the world
-
+        guard let table = self.table else { return }
         // If table successfully placed, store table dimension and location to GameInfo, and loading mahjongs to the table
-        if self.performPlaceTable(table: self.table[0]) {
+        if self.performPlaceTable(table: table) {
             logger.info("User successfually placed mahjong")
             tablePlaced = true
             

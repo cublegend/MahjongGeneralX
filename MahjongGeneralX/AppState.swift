@@ -10,6 +10,7 @@
 import Foundation
 import OSLog
 import ARKit
+import MahjongCore
 
 let logger = Logger(subsystem: "com.example.MahjongDemo2", category: "general")
 
@@ -25,21 +26,30 @@ public class AppState {
     private(set) weak var placementManager: PlacementManager?
     private(set) weak var gameManager: GameManager?
 
-    func immersiveSpaceOpened(with manager: PlacementManager) {
-        placementManager = manager
+    @MainActor
+    func immersiveSpaceOpened(with placementManager: PlacementManager, and gameManager: GameManager) {
+        self.placementManager = placementManager
+        self.gameManager = gameManager
+        let table = ModelLoader.getTable()
+        placementManager.onModelLoaded(table: table)
+        gameManager.onModelLoaded(table: table)
+        placementManager.appState = self
     }
 
     func cleanUpAfterLeavingImmersiveSpace() {
         // Remember which placed object is attached to which persistent world anchor when leaving the immersive space.
         if let placementManager {
             placementManager.saveWorldAnchorsObjectsMapToDisk()
-            appPhase = .welcome
             // Stop the providers. The providers that just ran in the
             // immersive space are paused now, but the session doesn’t need them anymore.
             // When the user reenters the immersive space, the app runs a new set of providers.
             arkitSession.stop()
         }
+        placementManager?.cleanUpData()
+        gameManager?.cleanUpGameData()
         placementManager = nil
+        gameManager = nil
+        appPhase = .mainMenu
     }
 
     // MARK: - ARKit authorization

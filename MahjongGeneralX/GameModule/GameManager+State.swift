@@ -24,8 +24,7 @@ extension GameManager {
         playerDecisions.removeAll()
         winnerIDs.removeAll()
         currentTurn = 0
-        currentPlayerIndex = Int.random(in: 0..<players.count) // TODO: change to random dealer
-        print("dealer is: \(players[currentPlayerIndex].playerID)")
+        currentPlayerIndex = 3 // TODO: change to random dealer
     }
 
     // MARK: .initialDraw
@@ -58,7 +57,6 @@ extension GameManager {
         }
         let command = SwitchTilesCommand(players: players.map({$0.basePlayer}), switchTiles: dic, order: switchOrder)
         Commands.executeCommand(command)
-        print("switch tile action performed")
         enterDecideDiscardState()
     }
 
@@ -80,5 +78,14 @@ extension GameManager {
     func enterRoundState() {
         guard gameState.transition(to: .round) else { return }
         nextTurn(state: .roundDraw)
+    }
+    
+    func endGame() {
+        guard gameState.transition(to: .gameEnd) else { return }
+        print("Game ended!")
+        // tell every player
+        for player in players {
+            player.onGameEnded()
+        }
     }
 }
