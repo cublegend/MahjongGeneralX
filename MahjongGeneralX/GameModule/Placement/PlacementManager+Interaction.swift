@@ -12,13 +12,15 @@ import UIKit
 
 struct DragState {
     var draggedObject: MahjongEntity
-    var initialPosition: SIMD3<Float>
+    var initialPositionNewParent: SIMD3<Float>
+    var initialPositionOldParent: SIMD3<Float>
     var parentEntity: Entity
     
     @MainActor
-    init(objectToDrag: MahjongEntity) {
+    init(objectToDrag: MahjongEntity, newPos: SIMD3<Float>) {
         draggedObject = objectToDrag
-        initialPosition = objectToDrag.position
+        initialPositionOldParent = objectToDrag.position
+        initialPositionNewParent = newPos
         parentEntity = objectToDrag.parent!
         print("parent 1: \(parentEntity.name)")
     }
@@ -26,7 +28,7 @@ struct DragState {
 
 extension PlacementManager {
     @MainActor
-    func updataDragDiscard(mahjong: MahjongEntity, value: EntityTargetValue<DragGesture.Value>) {
+    func updataDragDiscard(mahjong: MahjongEntity, value: EntityTargetValue<DragGesture.Value>, localPlayer: LocalPlayerController) {
         if let currentDrag, currentDrag.draggedObject !== mahjong {
             // Make sure any previous drag ends before starting a new one.
             print("A new drag started but the previous one never ended - ending that one now.")
@@ -36,19 +38,20 @@ extension PlacementManager {
         guard let table = self.table else { return }
 
         if currentDrag == nil {
-            currentDrag = DragState(objectToDrag: mahjong)
             let tempPosition = table.convert(position: mahjong.position, from: mahjong)
+            currentDrag = DragState(objectToDrag: mahjong, newPos: tempPosition)
             mahjong.removeFromParent()
             table.addChild(mahjong)
-            mahjong.position = tempPosition
         }
         
         if let currentDrag {
-            currentDrag.draggedObject.position = currentDrag.initialPosition + value.convert(value.translation3D, from: .local, to: table)
-            if inDiscardPileArea(handPos: currentDrag.draggedObject.position) {
-                highlightEntity.components.set(OpacityComponent(opacity: 1))
-            } else {
-                highlightEntity.components.set(OpacityComponent(opacity: 0))
+            currentDrag.draggedObject.position = currentDrag.initialPositionNewParent + value.convert(value.translation3D, from: .local, to: table)
+            if localPlayer.playerState == .roundDiscard {
+                if inDiscardPileArea(handPos: currentDrag.draggedObject.position) {
+                    highlightEntity.components.set(OpacityComponent(opacity: 1))
+                } else {
+                    highlightEntity.components.set(OpacityComponent(opacity: 0.3))
+                }
             }
         }
     }
@@ -57,19 +60,14 @@ extension PlacementManager {
     func endDrag(mahjong: MahjongEntity, localPlayer: LocalPlayerController) {
         guard let currentDrag else { return }
         highlightEntity.components.set(OpacityComponent(opacity: 0))
-        if !inDiscardPileArea(handPos: currentDrag.draggedObject.position) {
-            // 放回去
-            currentDrag.parentEntity.addChild(currentDrag.draggedObject)
-            currentDrag.draggedObject.position = currentDrag.initialPosition
-            print("parent2 name: ", currentDrag.parentEntity.name)
-//            currentDrag.parentEntity.addChild(currentDrag.draggedObject)
-//            currentDrag.draggedObject.affectedByPhysics = false
+
+        if localPlayer.playerState == .roundDiscard && inDiscardPileArea(handPos: currentDrag.draggedObject.position) && localPlayer.tryProcessDiscardTile(mahjong) {
+            self.currentDrag = nil
         } else {
-            localPlayer.processDiscardTile(mahjong)
-//            currentDrag.draggedObject.affectedByPhysics = false
+            currentDrag.parentEntity.addChild(currentDrag.draggedObject)
+            currentDrag.draggedObject.position = currentDrag.initialPositionOldParent
+            self.currentDrag = nil
         }
-//        currentDrag.draggedObject.isBeingDragged = false
-        self.currentDrag = nil
     }
     
     @MainActor

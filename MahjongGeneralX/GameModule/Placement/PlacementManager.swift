@@ -101,7 +101,7 @@ public final class PlacementManager {
             logger.info("User successfually placed mahjong")
             tablePlaced = true
             
-            highlightEntity.position = SIMD3<Float>(0, TableEntity.TABLE_HEIGHT, 0)
+            highlightEntity.position = SIMD3<Float>(0, TableEntity.TABLE_HEIGHT/2 + TableEntity.TABLE_HEIGHT/10, 0)
             table.addChild(highlightEntity)
         }
     }

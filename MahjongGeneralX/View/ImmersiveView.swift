@@ -97,7 +97,7 @@ struct ImmersiveView: View {
         })
         .gesture(DragGesture().targetedToAnyEntity().onChanged { value in
             if let mahjong = value.entity as? MahjongEntity {
-                placementManager.updataDragDiscard(mahjong: mahjong, value: value)
+                placementManager.updataDragDiscard(mahjong: mahjong, value: value, localPlayer: localPlayer!)
             }
         }
         .onEnded { value in
