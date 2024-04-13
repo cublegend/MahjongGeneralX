@@ -63,8 +63,9 @@ public final class PlacementManager {
         placementState.selectedObject = self.table[0].previewEntity
         placementLocation.addChild(placementState.selectedObject)
         
-        guard let menu = userUtilsView else { print("jinqulemei"); return }
-        rootEntity.addChild(menu)
+        guard let menu = userUtilsView else { return }
+        menu.position = SIMD3<Float>(0, TableEntity.TABLE_HEIGHT, 0)
+        placementLocation.addChild(menu)
     }
 
     @MainActor

@@ -23,6 +23,10 @@ struct ImmersiveView: View {
     var body: some View {
         let localPlayer = gameManager.localPlayer
         RealityView { content, attachments in
+            if let utilsView = attachments.entity(for: AttachmentIDs.utilsView) {
+                placementManager.userUtilsView = utilsView
+            }
+            
             content.add(placementManager.rootEntity)
             let table = ModelLoader.getTable()
             placementManager.onModelLoaded(table: table)
@@ -31,10 +35,6 @@ struct ImmersiveView: View {
             
             Task {
                 await placementManager.runARKitSession()
-            }
-            
-            if let utilsView = attachments.entity(for: AttachmentIDs.utilsView) {
-                placementManager.userUtilsView = utilsView
             }
         } update: { _, attachments in
             if gameManager.gameState == .decideDiscard {
